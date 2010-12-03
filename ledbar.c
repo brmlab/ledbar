@@ -44,13 +44,22 @@ void programQ(int i, int t, double *r, double *g, double *b)
     double index = 1.0*i/BOXES;
     double time = 0.01*t;
     *r = (sin(M_PI*2*index+time)+1.0)/2;
+    *g = (sin(M_PI*2*index+time+M_PI*2/3)+1.0)/2;
+    *b = (sin(M_PI*2*index+time+M_PI*4/3)+1.0)/2;
+}
+
+// rainbow with different speeds
+void programW(int i, int t, double *r, double *g, double *b)
+{
+    double index = 1.0*i/BOXES;
+    double time = 0.01*t;
+    *r = (sin(M_PI*2*index+time)+1.0)/2;
     *g = (sin(M_PI*2*index+time/1.618)+1.0)/2;
     *b = (sin(M_PI*2*index+time*1.618)+1.0)/2;
 }
 
-
 // knight rider
-void programW(int i, int t, double *r, double *g, double *b)
+void programE(int i, int t, double *r, double *g, double *b)
 {
     static float pos = BOXES/2;
     static float dir = 0.001;
@@ -113,6 +122,7 @@ int main(int argc, char* argv[])
                     switch(event.key.keysym.sym) {
                         case SDLK_q: program = programQ; break;
                         case SDLK_w: program = programW; break;
+                        case SDLK_e: program = programE; break;
                         case SDLK_ESCAPE: quit = 1; break;
                         default: break;
                     }
