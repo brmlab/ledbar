@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
         rects[t].x = t*(size+4) + (RESX-(size+4)*BOXES+4)/2;
         rects[t].y = (RESY-size)/2;
     }
-    program = programA;
+    program = programQ;
     while (!quit) {
         drawScreen(screen,t++);
         while(SDL_PollEvent(&event)) {
