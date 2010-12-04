@@ -62,7 +62,7 @@ void programW(int i, int t, double *r, double *g, double *b)
 void programE(int i, int t, double *r, double *g, double *b)
 {
     static float pos = BOXES/2;
-    static float dir = 0.001;
+    static float dir = 0.01;
     *r = max(1 - fabsl((pos-i)/BOXES)*4, 0);
     *g = 0;
     *b = 0;
@@ -70,6 +70,30 @@ void programE(int i, int t, double *r, double *g, double *b)
     if (pos < 0 || pos > BOXES) dir = -dir;
 }
 
+// binary
+void programR(int i, int t, double *r, double *g, double *b)
+{
+    t /= 10;
+    *r = 0;
+    *g = t & (1<<(BOXES-i-1)) ? 1 : 0;
+    *b = 0;
+}
+
+// morse code
+void programT(int i, int t, double *r, double *g, double *b)
+{
+// . -> 'x'   - -> 'xxx'   interelement -> ' '
+// interletter -> '   '    interword -> '       '
+//    static const char *str = "brmlab rulez ";
+    static const char *str = "xxx x x x   x xxx x   xxx xxx   x xxx x x   x xxx   xxx x x x       x xxx x   x x xxx   x xxx x x   x   xxx xxx x x       ";
+    static int len;
+    len = strlen(str);
+
+    t /= 50;
+    *r = 0;
+    *g = str[(i+t)%len]!=' ' ? 1 : 0;
+    *b = 0;
+}
 
 void drawScreen(SDL_Surface* screen, int t)
 {
@@ -123,6 +147,8 @@ int main(int argc, char* argv[])
                         case SDLK_q: program = programQ; break;
                         case SDLK_w: program = programW; break;
                         case SDLK_e: program = programE; break;
+                        case SDLK_r: program = programR; break;
+                        case SDLK_t: program = programT; break;
                         case SDLK_ESCAPE: quit = 1; break;
                         default: break;
                     }
