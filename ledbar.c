@@ -91,9 +91,26 @@ void programT(int i, int t, double *r, double *g, double *b)
 
     t /= 50;
     *r = 0;
-    *g = str[(i+t)%len]!=' ' ? 1 : 0;
+    *g = str[(i+t)%len]=='x' ? 1 : 0;
     *b = 0;
 }
+
+// MiniPOV brmlab
+void programY(int i, int t, double *r, double *g, double *b)
+{
+
+    static const char *bm[] = {
+        "x             x     x  ",
+        "xx   x   x x  x  xx xx ",
+        "x x x x x x x x x x x x",
+        "xx  x   x x x x  xx xx "
+    };
+    t = t % 4;
+    *r = 0;
+    *g = t<4 && i<23 && bm[t][i]=='x' ? 1 : 0;
+    *b = 0;
+}
+
 
 void drawScreen(SDL_Surface* screen, int t)
 {
@@ -149,6 +166,7 @@ int main(int argc, char* argv[])
                         case SDLK_e: program = programE; break;
                         case SDLK_r: program = programR; break;
                         case SDLK_t: program = programT; break;
+                        case SDLK_y: program = programY; break;
                         case SDLK_ESCAPE: quit = 1; break;
                         default: break;
                     }
