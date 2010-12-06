@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 #include <SDL.h>
 
 #define min(x,y) ( (x)<(y) ? (x) : (y) )
@@ -111,6 +112,35 @@ void programY(int i, int t, double *r, double *g, double *b)
     *b = 0;
 }
 
+// clock - binary
+void programU(int i, int t, double *r, double *g, double *b)
+{
+    int h, m, s;
+    t = time(NULL) % 86400;
+    h = t/3600;
+    m = t/60%60;
+    s = t%60;
+    *r = i==0 || i ==BOXES-1 || ((h&16) && i==BOXES-21) || ((h& 8) && i==BOXES-20) || ((h&4) && i==BOXES-19) || ((h&2) && i==BOXES-18) || ((h&1) && i==BOXES-17) ? 1 : 0;
+    *g = i==0 || i ==BOXES-1 || ((m&32) && i==BOXES-15) || ((m&16) && i==BOXES-14) || ((m&8) && i==BOXES-13) || ((m&4) && i==BOXES-12) || ((m&2) && i==BOXES-11) || ((m&1) && i==BOXES-10) ? 1 : 0;
+    *b = i==0 || i ==BOXES-1 || ((s&32) && i==BOXES- 8) || ((s&16) && i==BOXES- 7) || ((s&8) && i==BOXES- 6) || ((s&4) && i==BOXES- 5) || ((s&2) && i==BOXES- 4) || ((s&1) && i==BOXES- 3) ? 1 : 0;
+}
+
+// clock - progressbar
+void programI(int i, int t, double *r, double *g, double *b)
+{
+    double h, m, s;
+    t = time(NULL) % 86400;
+    h = 7.0*(t/3600)/24 - i;
+    m = 8.0*(t/60%60)/60 - (i-7);
+    s = 8.0*(t%60)/60 - (i-15);
+    if (h<0) h = 0; else if (h>1) h = 1;
+    if (m<0) m = 0; else if (m>1) m = 1;
+    if (s<0) s = 0; else if (s>1) s = 1;
+    *r = h;
+    *g = i>7 ? m : 0;
+    *b = i>15 ? s : 0;
+}
+
 
 void drawScreen(SDL_Surface* screen, int t)
 {
@@ -167,6 +197,8 @@ int main(int argc, char* argv[])
                         case SDLK_r: program = programR; break;
                         case SDLK_t: program = programT; break;
                         case SDLK_y: program = programY; break;
+                        case SDLK_u: program = programU; break;
+                        case SDLK_i: program = programI; break;
                         case SDLK_ESCAPE: quit = 1; break;
                         default: break;
                     }
