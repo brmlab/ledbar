@@ -1,0 +1,7 @@
+These sketches require the Tlc5940 library, with NUM_TLCS set to 23.
+You may also need to reduce HardwareSerial RX_BUFFER_SIZE to something
+like 16 in order to free up more RAM.
+
+autonomous.pde: This is autonomous LED controller that implements several
+simple color cycling algorithms directly on Ardiuno - no host controller
+is required. All LEDs have the same color. Useful for testing.
