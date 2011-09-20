@@ -24,6 +24,7 @@
 #include <math.h>
 #include <time.h>
 #include <SDL.h>
+#include <unistd.h>
 
 #define min(x,y) ( (x)<(y) ? (x) : (y) )
 #define max(x,y) ( (x)>(y) ? (x) : (y) )
@@ -282,6 +283,8 @@ int main(int argc, char* argv[])
         printf("Usage: %s [output]\n", argv[0]);
         return 1;
     }
+
+    sleep(2);
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) return 1;
     if (!(screen = SDL_SetVideoMode(RESX, RESY, BPP, SDL_HWSURFACE))) {
