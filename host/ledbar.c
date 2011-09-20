@@ -117,7 +117,7 @@ void programY(int i, int t, double *r, double *g, double *b)
         "x x x x x x x x x x x x",
         "xx  x   x x x x  xx xx "
     };
-    t = t/10 % 4;
+    t = t/2 % 4;
     *r = 0;
     *g = t<4 && i<23 && bm[t][i]=='x' ? 1 : 0;
     *b = 0;
