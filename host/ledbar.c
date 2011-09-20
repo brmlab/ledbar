@@ -261,6 +261,7 @@ void drawScreen(SDL_Surface* screen, int t, FILE* fp)
 
     if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
     SDL_Flip(screen);
+    fflush(fp);
 }
 
 
