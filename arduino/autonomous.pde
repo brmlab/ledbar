@@ -5,40 +5,38 @@
 #define TLCCH(tlc_num, ch_num) ((tlc_num)*16 + (ch_num))
 
 unsigned int xr1 = 19543;
-int c[CH];
 
-//int cmax[CH] = { 2800, 4095, 3500 }; - max intensity
-/* cca 2.7ohm resistor per channel */
-int cmax[CH] = { 1600, 3900, 2400 }; // - same visual perception
 int cpin[][CH] = {
-  {TLCCH(0, 9), TLCCH(0, 10),TLCCH(0, 11)},
-  {TLCCH(1, 9), TLCCH(1, 11),TLCCH(1, 10)},
-  {TLCCH(1, 1), TLCCH(1, 2), TLCCH(1, 3)},
-  {TLCCH(2, 12),TLCCH(2, 13),TLCCH(2, 14)},
-  {TLCCH(3, 12),TLCCH(3, 13),TLCCH(3, 14)},
-  {TLCCH(4, 12),TLCCH(4, 13),TLCCH(4, 14)},
+  {TLCCH(0, 2), TLCCH(0, 1), TLCCH(0, 0)},
+  {TLCCH(0, 5), TLCCH(0, 4), TLCCH(0, 3)},
+  {TLCCH(0, 8), TLCCH(0, 7), TLCCH(0, 6)},
+  {TLCCH(0, 12), TLCCH(0, 11),TLCCH(0, 10)},
+  {TLCCH(0, 15),TLCCH(0, 14),TLCCH(0, 13)},
 
-  {TLCCH(0, 0), TLCCH(0, 1), TLCCH(0, 2)},
-  {TLCCH(0, 3), TLCCH(0, 4), TLCCH(0, 5)},
-  {TLCCH(0, 6), TLCCH(0, 7), TLCCH(0, 8)},
-  {TLCCH(0, 12),TLCCH(0, 13),TLCCH(0, 14)},
-  {TLCCH(1, 0), TLCCH(1, 4), TLCCH(1, 5)},
-  {TLCCH(1, 6), TLCCH(1, 7), TLCCH(1, 8)},
-  {TLCCH(1, 12),TLCCH(1, 13),TLCCH(1, 14)},
-  {TLCCH(2, 0), TLCCH(2, 1), TLCCH(2, 2)},
-  {TLCCH(2, 3), TLCCH(2, 4), TLCCH(2, 5)},
-  {TLCCH(2, 6), TLCCH(2, 7), TLCCH(2, 8)},
-  {TLCCH(2, 9), TLCCH(2, 10),TLCCH(2, 11)},
-  {TLCCH(3, 0), TLCCH(3, 1), TLCCH(3, 2)},
-  {TLCCH(3, 3), TLCCH(3, 4), TLCCH(3, 5)},
-  {TLCCH(3, 6), TLCCH(3, 7), TLCCH(3, 8)},
-  {TLCCH(3, 9), TLCCH(3, 10),TLCCH(3, 11)},
-  {TLCCH(4, 0), TLCCH(4, 1), TLCCH(4, 2)},
-  {TLCCH(4, 3), TLCCH(4, 4), TLCCH(4, 5)},
-  {TLCCH(4, 6), TLCCH(4, 7), TLCCH(4, 8)},
-  {TLCCH(4, 9), TLCCH(4, 10),TLCCH(4, 11)},
+  {TLCCH(1, 2), TLCCH(1, 1), TLCCH(1, 0)},
+  {TLCCH(1, 5), TLCCH(1, 4), TLCCH(1, 3)},
+  {TLCCH(1, 8), TLCCH(1, 7), TLCCH(1, 6)},
+  {TLCCH(1, 12), TLCCH(1, 11), TLCCH(1, 10)},
+  {TLCCH(1, 15), TLCCH(1, 14), TLCCH(1, 13)},
 };
 #define cpinsets (sizeof(cpin)/sizeof(cpin[0]))
+
+/* cca 2.7ohm resistor per channel */
+int cmax[cpinsets][CH] = {
+  { 1600, 4000, 2200 },
+  { 1600, 4000, 2200 },
+  { 1600, 4000, 2200 },
+  { 1600, 3900, 2000 },
+  { 1600, 3700, 3000 },
+
+  { 1600, 4000, 2200 },
+  { 1600, 4000, 2200 },
+  { 1600, 3400, 3000 },
+  { 1600, 4000, 2200 },
+  { 1600, 3400, 3000 },
+};
+int c[cpinsets][CH];
+
 int wait = 10;
 
 void setup()
@@ -47,9 +45,10 @@ void setup()
   /* Call Tlc.init() to setup the tlc.
      You can optionally pass an initial PWM value (0 - 4095) for all channels.*/
   Tlc.init();
-  int i = 0;
-  for (i = 0; i < CH; i++)
-    c[i] = cmax[i] / 2;
+  int i = 0, led = 0;
+  for (led = 0; led < cpinsets; led++)
+    for (i = 0; i < CH; i++)
+      c[led][i] = cmax[led][i] / 2;
   xr1 += analogRead(0);
 }
 
@@ -60,42 +59,55 @@ int r(int ceiling)
 }
 
 /* One iteration of random colorspace walk. */
-void random_walk()
+void random_walk(int led)
 {
   static const int maxstep = 2;
   static const int maxbounce = maxstep * 2;
-  static const int maxgrad = 32;
+  static const int maxgrad = 16;
   static const int cmaxgrad[CH] = {maxgrad, maxgrad, maxgrad};
   static const int dampening = 8; // less means tend to smaller gradient
-  static int g[CH] = {0, 0, 0};
+  static int g[cpinsets][CH];
 
   int i;
 
   for (i = 0; i < CH; i++) {
-    g[i] += r(maxstep) * (r(2) ? 1 : -1);
-    /* dampening */ g[i] += (g[i] > 0 ? -1 : 1) * r(abs(g[i])) / dampening;
-    if (g[i] < -cmaxgrad[i]) g[i] = -cmaxgrad[i] + r(maxbounce); else if (g[i] > cmaxgrad[i]) g[i] = cmaxgrad[i] - r(maxbounce);
+    g[led][i] += r(maxstep) * (r(2) ? 1 : -1);
+    /* dampening */ g[led][i] += (g[led][i] > 0 ? -1 : 1) * r(abs(g[led][i])) / dampening;
+    if (g[led][i] < -cmaxgrad[i]) g[led][i] = -cmaxgrad[i] + r(maxbounce); else if (g[led][i] > cmaxgrad[i]) g[led][i] = cmaxgrad[i] - r(maxbounce);
 
-    c[i] += g[i];
-    if (c[i] < 0) { c[i] = 0; g[i] = -g[i] + r(maxbounce)-maxbounce/2; } else if (c[i] > cmax[i]) { c[i] = cmax[i]; g[i] = -g[i] + r(maxbounce)-maxbounce/2; }
+    c[led][i] += g[led][i];
+    if (c[led][i] < 0) { c[led][i] = 0; g[led][i] = -g[led][i] + r(maxbounce)-maxbounce/2; } else if (c[led][i] > cmax[led][i]) { c[led][i] = cmax[led][i]; g[led][i] = -g[led][i] + r(maxbounce)-maxbounce/2; }
   }
 }
 
-void rainbow()
+void rainbow(int led)
 {
-  static int huephase = 0;
-  static int huephase_i = 0;
-#define HUEPHASE_LEN 32
+  static int huephases[cpinsets];
+  static int huephases_i[cpinsets];
+#define HUEPHASE_LEN 128//512
 
-#define huephase_to_c_inc(cc) (uint32_t) huephase_i * cmax[cc] / HUEPHASE_LEN
-#define huephase_to_c_dec(cc) (cmax[cc] - (uint32_t) huephase_i * cmax[cc] / HUEPHASE_LEN)
+  static int ini;
+  if (!ini) {
+    ini = 1;
+    int v_max = 6 * HUEPHASE_LEN;
+    for (int l = 0; l < cpinsets; l++) {
+      int i = v_max * l / cpinsets;
+      huephases[l] = i / HUEPHASE_LEN;
+      huephases_i[l] = i % HUEPHASE_LEN;
+    }
+  }
+
+  { int huephase = huephases[led], huephase_i = huephases_i[led];
+  
+#define huephase_to_c_inc(cc) (uint32_t) huephase_i * cmax[led][cc] / HUEPHASE_LEN
+#define huephase_to_c_dec(cc) (cmax[led][cc] - (uint32_t) huephase_i * cmax[led][cc] / HUEPHASE_LEN)
   switch (huephase) {
-    case 0: c[0] = cmax[0]; c[1] = huephase_to_c_inc(1); c[2] = 0; break;
-    case 1: c[0] = huephase_to_c_dec(0); c[1] = cmax[1]; c[2] = 0; break;
-    case 2: c[0] = 0; c[1] = cmax[1]; c[2] = huephase_to_c_inc(2); break;
-    case 3: c[0] = 0; c[1] = huephase_to_c_dec(1); c[2] = cmax[2]; break;
-    case 4: c[0] = huephase_to_c_inc(0); c[1] = 0; c[2] = cmax[2]; break;
-    case 5: c[0] = cmax[0]; c[1] = 0; c[2] = huephase_to_c_dec(2); break;
+    case 0: c[led][0] = cmax[led][0]; c[led][1] = huephase_to_c_inc(1); c[led][2] = 0; break;
+    case 1: c[led][0] = huephase_to_c_dec(0); c[led][1] = cmax[led][1]; c[led][2] = 0; break;
+    case 2: c[led][0] = 0; c[led][1] = cmax[led][1]; c[led][2] = huephase_to_c_inc(2); break;
+    case 3: c[led][0] = 0; c[led][1] = huephase_to_c_dec(1); c[led][2] = cmax[led][2]; break;
+    case 4: c[led][0] = huephase_to_c_inc(0); c[led][1] = 0; c[led][2] = cmax[led][2]; break;
+    case 5: c[led][0] = cmax[led][0]; c[led][1] = 0; c[led][2] = huephase_to_c_dec(2); break;
   }
   
   huephase_i++;
@@ -103,19 +115,36 @@ void rainbow()
     huephase_i = 0;
     huephase = (huephase + 1) % 6;
   }
-}
-
-/* One iteration of constant brightest white (useful for tuning constants for particular LEDs). */
-void white()
-{
-  int i;
-  for (i = 0; i < CH; i++) {
-    c[i] = cmax[i];
+  
+  huephases[led] = huephase; huephases_i[led] = huephase_i;
   }
 }
 
+/* One iteration of constant brightest white (useful for tuning constants for particular LEDs). */
+void white(int led)
+{
+  int i;
+  int mask = 1|2|4; // R, G, B
+  for (i = 0; i < CH; i++) {
+    c[led][i] = mask & (1 << i) ? cmax[led][i] : 0;
+  }
+}
+
+
+void custom(int led)
+{
+  long red =   100 - abs (led-9) * 10;
+  long green = 30;
+  long blue =  100 - abs(led-1) * 10;
+  
+  c[led][0] = red  * cmax[led][0] / 100;
+  c[led][1] = green* cmax[led][1] / 100;
+  c[led][2] = blue * cmax[led][2] / 100;
+}
+
+
 /* White "breathing" effect to a certain degree of intensity. Good for identifying a point where further intensity change does not make any difference. */
-void grey()
+void grey(int led)
 {
   static const int steps = 20;
   static int s = 0;
@@ -123,7 +152,7 @@ void grey()
 
   int i;
   for (i = 0; i < CH; i++) {
-    c[i] = (uint32_t) cmax[i] * s / steps;
+    c[led][i] = (uint32_t) cmax[led][i] * s / steps;
   }
   if (s == steps) {
     d = -1;
@@ -136,21 +165,25 @@ void grey()
 void loop()
 {
   Tlc.clear();
-  
-  random_walk();
-  //rainbow();
-  //white();
-  //grey();
+
+  int led;
+  for (led = 0; led < cpinsets; led++) {
+    //random_walk(led);
+    rainbow(led);
+    //white(led);
+    //custom(led);
+    //grey(led);
+  }
 
   int i;
   for (i = 0; i < CH; i++) {
-    Serial.print(c[i], DEC); Serial.print(" ");
-    int j;
-    for (j = 0; j < cpinsets; j++) {
-      Tlc.set(cpin[j][i], c[i]);
+    for (led = 0; led < cpinsets; led++) {
+      //Serial.print(cpin[led][i], DEC); Serial.print("="); Serial.print(c[led][i], DEC); Serial.print("/"); Serial.print(cmax[led][i], DEC); Serial.print(" ");
+      Tlc.set(cpin[led][i], c[led][i]);
     }
   }
-  Serial.println();
+  //Serial.print(NUM_TLCS, DEC);
+  //Serial.println();
 
   /* Tlc.update() sends the data to the TLCs.  This is when the LEDs will
      actually change. */
