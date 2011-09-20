@@ -34,6 +34,7 @@
 #define RESY 600
 #define BPP 32
 #define BOXES 10
+#define FPS 40
 
 SDL_Rect rects[BOXES];
 
@@ -271,7 +272,7 @@ int main(int argc, char* argv[])
     int t = 0;
     int size;
     int lastUpdate = 0;
-    int sleep;
+    int wait;
     FILE* fp;
 
     if (argc == 1) fp = 0;
@@ -318,11 +319,11 @@ int main(int argc, char* argv[])
                     break;
             }
         }
-        sleep = 25 - (SDL_GetTicks() - lastUpdate);
-        if (sleep > 0) {
-            SDL_Delay(sleep);
+        wait = 1000/FPS - (SDL_GetTicks() - lastUpdate);
+        if (wait > 0) {
+            SDL_Delay(wait);
         }
-        lastUpdate += 25;
+        lastUpdate += 1000/FPS;
     }
     SDL_Quit();
     if (fp) {
