@@ -234,15 +234,24 @@ void programP(int i, int t, double *r, double *g, double *b)
 }
 
 
-void drawScreen(SDL_Surface* screen, int t)
+void drawScreen(SDL_Surface* screen, int t, FILE* fp)
 {
     int i;
     double r, g, b;
+    unsigned char c;
 
     if(SDL_MUSTLOCK(screen) && SDL_LockSurface(screen) < 0) return;
 
     for (i=0; i<BOXES; ++i) {
         program(i, t, &r, &g, &b);
+        if (fp) {
+            c = r*255;
+            fwrite(&c, sizeof c, 1, fp);
+            c = g*255;
+            fwrite(&c, sizeof c, 1, fp);
+            c = b*255;
+            fwrite(&c, sizeof c, 1, fp);
+        }
 #ifdef DEBUG
         printf("%2d %d %f %f %f\n", i, t, r, g, b);
 #endif
@@ -263,6 +272,14 @@ int main(int argc, char* argv[])
     int size;
     int lastUpdate = 0;
     int sleep;
+    FILE* fp;
+
+    if (argc == 1) fp = 0;
+    else if (argc == 2) fp = fopen(argv[1], "wb");
+    else {
+        printf("Usage: %s [output]\n", argv[0]);
+        return 1;
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) return 1;
     if (!(screen = SDL_SetVideoMode(RESX, RESY, BPP, SDL_HWSURFACE))) {
@@ -278,7 +295,7 @@ int main(int argc, char* argv[])
     }
     program = programQ;
     while (!quit) {
-        drawScreen(screen,t++);
+        drawScreen(screen, t++, fp);
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -308,5 +325,9 @@ int main(int argc, char* argv[])
         lastUpdate += 25;
     }
     SDL_Quit();
+    if (fp) {
+        fclose(fp);
+        fp = 0;
+    }
     return 0;
 }
