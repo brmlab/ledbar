@@ -33,7 +33,7 @@
 #define RESX 800
 #define RESY 600
 #define BPP 32
-#define BOXES 23
+#define BOXES 10
 
 SDL_Rect rects[BOXES];
 
@@ -156,7 +156,7 @@ void programI(int i, int t, double *r, double *g, double *b)
 void programO(int i, int t, double *r, double *g, double *b)
 {
 #define PERIOD 1200
-#define MAX_DIST 9
+#define MAX_DIST 4
     t += PERIOD;
     unsigned int rnd, seed;
     int t1;
