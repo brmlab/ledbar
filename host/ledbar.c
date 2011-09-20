@@ -24,6 +24,7 @@
 #include <math.h>
 #include <time.h>
 #include <SDL.h>
+#include <termios.h>
 #include <unistd.h>
 
 #define min(x,y) ( (x)<(y) ? (x) : (y) )
@@ -282,6 +283,13 @@ int main(int argc, char* argv[])
     else {
         printf("Usage: %s [output]\n", argv[0]);
         return 1;
+    }
+
+    if (fp) {
+	struct termios t;
+	tcgetattr(fileno(fp), &t);
+	cfsetspeed(&t, B38400);
+	tcsetattr(fileno(fp), TCSADRAIN, &t);
     }
 
     sleep(2);
