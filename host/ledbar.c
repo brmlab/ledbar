@@ -63,7 +63,7 @@ void programW(int i, int t, double *r, double *g, double *b)
 void programE(int i, int t, double *r, double *g, double *b)
 {
     static float pos = BOXES/2;
-    static float dir = 0.01;
+    static float dir = 0.05;
     *r = max(1 - fabsl((pos-i)/BOXES)*4, 0);
     *g = 0;
     *b = 0;
@@ -86,14 +86,23 @@ void programT(int i, int t, double *r, double *g, double *b)
 // . -> 'x'   - -> 'xxx'   interelement -> ' '
 // interletter -> '   '    interword -> '       '
 //    static const char *str = "brmlab rulez ";
-    static const char *str = "xxx x x x   x xxx x   xxx xxx   x xxx x x   x xxx   xxx x x x       x xxx x   x x xxx   x xxx x x   x   xxx xxx x x       ";
+    static const char *str = "xxx  x  x  x    x  xxx  x    xxx  xxx    x  xxx  x  x    x  xxx    xxx  x  x  x        "
+                             "x  xxx  x    x  x  xxx    x  xxx  x  x    x    xxx  xxx  x  x        ";
     static int len;
     len = strlen(str);
 
-    t /= 50;
+    int t1 = t/10;
+    int t2 = t%10;
     *r = 0;
-    *g = str[(i+t)%len]=='x' ? 1 : 0;
     *b = 0;
+    int c1 = str[(i+t1)%len] == 'x' ? 1 : 0;
+    int c2 = str[(i+t1+1)%len] == 'x' ? 1 : 0;
+    switch (2*c1+c2) {
+        case 0: *g = 0; break;
+        case 1: *g = t2/10.0; break;
+        case 2: *g = 1-t2/10.0; break;
+        case 3: *g = 1; break;
+    }
 }
 
 // MiniPOV brmlab
@@ -106,7 +115,7 @@ void programY(int i, int t, double *r, double *g, double *b)
         "x x x x x x x x x x x x",
         "xx  x   x x x x  xx xx "
     };
-    t = t % 4;
+    t = t/10 % 4;
     *r = 0;
     *g = t<4 && i<23 && bm[t][i]=='x' ? 1 : 0;
     *b = 0;
@@ -120,9 +129,11 @@ void programU(int i, int t, double *r, double *g, double *b)
     h = t/3600;
     m = t/60%60;
     s = t%60;
-    *r = i==0 || i ==BOXES-1 || ((h&16) && i==BOXES-21) || ((h& 8) && i==BOXES-20) || ((h&4) && i==BOXES-19) || ((h&2) && i==BOXES-18) || ((h&1) && i==BOXES-17) ? 1 : 0;
-    *g = i==0 || i ==BOXES-1 || ((m&32) && i==BOXES-15) || ((m&16) && i==BOXES-14) || ((m&8) && i==BOXES-13) || ((m&4) && i==BOXES-12) || ((m&2) && i==BOXES-11) || ((m&1) && i==BOXES-10) ? 1 : 0;
-    *b = i==0 || i ==BOXES-1 || ((s&32) && i==BOXES- 8) || ((s&16) && i==BOXES- 7) || ((s&8) && i==BOXES- 6) || ((s&4) && i==BOXES- 5) || ((s&2) && i==BOXES- 4) || ((s&1) && i==BOXES- 3) ? 1 : 0;
+    *r = *g = *b = 0;
+    if (i == 0 || i == 6 || i == 7 || i == 14 || i == 15 || i == 22) *r = *g = *b = 1;
+    else if (i <  6) *r = (h&(1<<( 5-i))) ? 1 : 0;
+    else if (i < 14) *g = (m&(1<<(13-i))) ? 1 : 0;
+    else if (i < 22) *b = (s&(1<<(21-i))) ? 1 : 0;
 }
 
 // clock - progressbar
@@ -137,8 +148,89 @@ void programI(int i, int t, double *r, double *g, double *b)
     if (m<0) m = 0; else if (m>1) m = 1;
     if (s<0) s = 0; else if (s>1) s = 1;
     *r = h;
-    *g = i>7 ? m : 0;
-    *b = i>15 ? s : 0;
+    *g = i>=7 ? m : 0;
+    *b = i>=15 ? s : 0;
+}
+
+// random moving lights
+void programO(int i, int t, double *r, double *g, double *b)
+{
+#define PERIOD 1200
+#define MAX_DIST 9
+    t += PERIOD;
+    unsigned int rnd, seed;
+    int t1;
+    double l, sel, dist, dir;
+
+    t1 = t/PERIOD;
+    seed = t1*3;
+    rnd = rand_r(&seed) % BOXES;
+    dir = (rand_r(&seed) % 1000)/10.0 - 50;
+    sel = fmod(rnd+t/(PERIOD/dir), BOXES);
+    if (sel < 0) sel += BOXES;
+    l = 1-abs((t-t1*PERIOD)-PERIOD/2)/((double) PERIOD/2);
+    l *= 3;
+    if (l > 1) l = 1;
+    dist = sel-i;
+    if (dist < 0) dist = dist+BOXES;
+    dist = fmin(dist, -dist+BOXES);
+    l *= (double)(MAX_DIST-dist)/MAX_DIST;
+    if (l < 0) l = 0;
+    *r = l;
+
+    t1 = (t-PERIOD/3)/PERIOD;
+    seed = t1*3+1;
+    rnd = rand_r(&seed) % BOXES;
+    dir = (rand_r(&seed) % 1000)/10.0 - 50;
+    sel = fmod(rnd+t/(PERIOD/dir), BOXES);
+    if (sel < 0) sel += BOXES;
+    l = 1-abs(fmod(t-PERIOD/3, PERIOD)-PERIOD/2)/((double) PERIOD/2);
+    l *= 3;
+    if (l > 1) l = 1;
+    dist = sel-i;
+    if (dist < 0) dist = dist+BOXES;
+    dist = fmin(dist, -dist+BOXES);
+    l *= (double)(MAX_DIST-dist)/MAX_DIST;
+    if (l < 0) l = 0;
+    *g = l;
+
+    t1 = (t-PERIOD*2/3)/PERIOD;
+    seed = t1*3+2;
+    rnd = rand_r(&seed) % BOXES;
+    dir = (rand_r(&seed) % 1000)/10.0 - 50;
+    sel = fmod(rnd+t/(PERIOD/dir), BOXES);
+    if (sel < 0) sel += BOXES;
+    l = 1-abs(fmod(t-PERIOD*2/3, PERIOD)-PERIOD/2)/((double) PERIOD/2);
+    l *= 3;
+    if (l > 1) l = 1;
+    dist = sel-i;
+    if (dist < 0) dist = dist+BOXES;
+    dist = fmin(dist, -dist+BOXES);
+    l *= (double)(MAX_DIST-dist)/MAX_DIST;
+    if (l < 0) l = 0;
+    *b = l;
+#undef PERIOD
+#undef MAX_DIST
+}
+
+// alternative rainbow
+void programP(int i, int t, double *r, double *g, double *b)
+{
+    double index = (double) i/BOXES;
+    double time = 0.01*t;
+    double phi = 6*index+time;
+    int phase = ((int) phi) % 6;
+    double part = fmod(phi, 1.0);
+    double inc = part;
+    double dec = 1-part;
+    switch (phase) {
+        case 0: *r=1;   *g=inc; *b=0;   break;
+        case 1: *r=dec; *g=1;   *b=0;   break;
+        case 2: *r=0;   *g=1;   *b=inc; break;
+        case 3: *r=0;   *g=dec; *b=1;   break;
+        case 4: *r=inc; *g=0;   *b=1;   break;
+        case 5: *r=1;   *g=0;   *b=dec; break;
+    }
 }
 
 
@@ -169,6 +261,8 @@ int main(int argc, char* argv[])
     int quit = 0;
     int t = 0;
     int size;
+    int lastUpdate = 0;
+    int sleep;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) return 1;
     if (!(screen = SDL_SetVideoMode(RESX, RESY, BPP, SDL_HWSURFACE))) {
@@ -199,12 +293,19 @@ int main(int argc, char* argv[])
                         case SDLK_y: program = programY; break;
                         case SDLK_u: program = programU; break;
                         case SDLK_i: program = programI; break;
+                        case SDLK_o: program = programO; break;
+                        case SDLK_p: program = programP; break;
                         case SDLK_ESCAPE: quit = 1; break;
                         default: break;
                     }
                     break;
             }
         }
+        sleep = 25 - (SDL_GetTicks() - lastUpdate);
+        if (sleep > 0) {
+            SDL_Delay(sleep);
+        }
+        lastUpdate += 25;
     }
     SDL_Quit();
     return 0;
