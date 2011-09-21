@@ -286,13 +286,12 @@ int main(int argc, char* argv[])
     }
 
     if (fp) {
-	struct termios t;
-	tcgetattr(fileno(fp), &t);
-	cfsetspeed(&t, B38400);
-	tcsetattr(fileno(fp), TCSADRAIN, &t);
+        struct termios t;
+        tcgetattr(fileno(fp), &t);
+        cfsetspeed(&t, B38400);
+        tcsetattr(fileno(fp), TCSADRAIN, &t);
+        sleep(2);
     }
-
-    sleep(2);
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) return 1;
     if (!(screen = SDL_SetVideoMode(RESX, RESY, BPP, SDL_HWSURFACE))) {
