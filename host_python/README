@@ -1,0 +1,26 @@
+INTRODUCTION:
+
+The scripts in this directory try to work according to the KISS principle. It 
+contains a script which redirects its stdin to serial device 
+(send_to_serial.py), one that simulates the ledbar and sends the data unaltered 
+from its stdin to its stdout, a module that helps programmers to program 
+various graphical effects and some example effect generators using this module.
+
+
+EXAMPLES:
+
+./rainbow.py | ./demo.py >/dev/null
+    - only simulate the rainbow effect, do not send it anywhere
+
+./rainbow.py | ./send_to_serial.py
+    - only send the data to the serial device, do not show the simulation
+
+./rainbow.py | ./demo.py | ./send_to_serial.py
+    - combine both options, show a simulation and send the data to the serial
+      device
+
+
+DEPENDENCIES:
+
+demo.py requires PyGame, Python wrapper around SDL
+send_to_serial.py requires PySerial, Python library for work with serial ports
