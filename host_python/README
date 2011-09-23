@@ -24,3 +24,4 @@ DEPENDENCIES:
 
 demo.py requires PyGame, Python wrapper around SDL
 send_to_serial.py requires PySerial, Python library for work with serial ports
+equalizer.py requires PyAudio (wrapper around PortAudio) and a microphone
