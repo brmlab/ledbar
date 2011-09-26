@@ -2,6 +2,7 @@
 # vim:et:sw=4:ts=4:sts=4
 
 import sys
+import time
 import serial
 import getopt
 
@@ -49,6 +50,7 @@ def main():
     except serial.serialutil.SerialException:
         print 'Could not open the serial device'
         return 1
+    time.sleep(2)
 
     try:
         while True:

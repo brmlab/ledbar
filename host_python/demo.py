@@ -64,6 +64,7 @@ def main():
                 b = read_byte()
                 pygame.draw.rect(screen, [r, g, b], [pixel_width*i, 0, pixel_width-offset, pixel_width-offset])
                 write_byte(r); write_byte(g); write_byte(b)
+            sys.stdout.flush()
             pygame.display.flip()
     except EOFError:
         pass
