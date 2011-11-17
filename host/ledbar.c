@@ -256,12 +256,10 @@ void programS(int i, int t, double *r, double *g, double *b)
         *g = (sin(((double)t/200)*(2*M_PI))+1)/2;
         *b = 0;
     } else {
-	*r = (sin(((double)t/400)*(2*M_PI))+1)/2;
+        *r = (sin(((double)t/400)*(2*M_PI))+1)/2;
         *g = (sin(((double)(t-200)/400)*(2*M_PI))+1)/2;
         *b = 0;
-    } 
-
-
+    }
 }
 
 // crossfade gb
@@ -272,12 +270,10 @@ void programD(int i, int t, double *r, double *g, double *b)
         *g = (sin(((double)t/200)*(2*M_PI))+1)/2;
         *b = (sin(((double)(t-100)/200)*(2*M_PI))+1)/2;
     } else {
-	*r = 0;
+        *r = 0;
         *g = (sin(((double)(t-200)/400)*(2*M_PI))+1)/2;
         *b = (sin(((double)t/400)*(2*M_PI))+1)/2;
-    } 
-
-
+    }
 }
 
 // crossfade rb
@@ -288,12 +284,10 @@ void programF(int i, int t, double *r, double *g, double *b)
         *g =0;
         *b = (sin(((double)(t-100)/200)*(2*M_PI))+1)/2;
     } else {
-	*r = (sin(((double)(t-200)/400)*(2*M_PI))+1)/2;
+        *r = (sin(((double)(t-200)/400)*(2*M_PI))+1)/2;
         *g = 0;
         *b = (sin(((double)t/400)*(2*M_PI))+1)/2;
-    } 
-
-
+    }
 }
 
 void drawScreen(SDL_Surface* screen, int t, FILE* fp)
@@ -383,10 +377,10 @@ int main(int argc, char* argv[])
                         case SDLK_i: program = programI; break;
                         case SDLK_o: program = programO; break;
                         case SDLK_p: program = programP; break;
-			case SDLK_a: program = programA; break;
-			case SDLK_s: program = programS; break;
-			case SDLK_d: program = programD; break;
-			case SDLK_f: program = programF; break;
+                        case SDLK_a: program = programA; break;
+                        case SDLK_s: program = programS; break;
+                        case SDLK_d: program = programD; break;
+                        case SDLK_f: program = programF; break;
                         case SDLK_ESCAPE: quit = 1; break;
                         default: break;
                     }
