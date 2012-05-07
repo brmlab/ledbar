@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="2.54" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.254" altunitdist="mm" altunit="mm"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
@@ -11717,11 +11717,17 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <attribute name="OC_NEWARK" value="unknown"/>
 </part>
 <part name="J1" library="con-tycoelectronics" deviceset="RJ11" device="" technology="-4X"/>
+<part name="J2" library="con-tycoelectronics" deviceset="RJ11" device="" technology="-4X">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value="6609214-3"/>
+<attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="OC_NEWARK" value="19R7022"/>
+</part>
 </parts>
 <sheets>
 <sheet>
 <plain>
-<text x="-50.8" y="104.14" size="1.778" layer="91">Je potreba zrevidovat konektory podle koupenych</text>
+<text x="-58.42" y="116.84" size="1.778" layer="91">Je potreba zrevidovat konektory podle koupenych</text>
 </plain>
 <instances>
 <instance part="X1" gate="G$1" x="162.56" y="116.84"/>
@@ -11776,7 +11782,8 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <instance part="R8" gate="G$1" x="5.08" y="33.02" rot="R90"/>
 <instance part="P+11" gate="1" x="27.94" y="15.24" rot="R270"/>
 <instance part="S1" gate="A" x="-5.08" y="48.26" rot="R90"/>
-<instance part="J1" gate="G$1" x="-20.32" y="88.9" rot="R90"/>
+<instance part="J1" gate="G$1" x="-20.32" y="104.14" rot="R90"/>
+<instance part="J2" gate="G$1" x="0" y="104.14" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -12004,10 +12011,20 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <junction x="-30.48" y="63.5"/>
 <junction x="-30.48" y="60.96"/>
 <pinref part="J1" gate="G$1" pin="4"/>
-<wire x1="-17.78" y1="63.5" x2="-17.78" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="-17.78" y1="63.5" x2="-17.78" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="J1" gate="G$1" pin="2"/>
-<wire x1="-22.86" y1="86.36" x2="-22.86" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="-17.78" y1="88.9" x2="-17.78" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="-22.86" y1="101.6" x2="-22.86" y2="93.98" width="0.1524" layer="91"/>
 <junction x="-22.86" y="63.5"/>
+<pinref part="J2" gate="G$1" pin="4"/>
+<wire x1="-22.86" y1="93.98" x2="-22.86" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="101.6" x2="2.54" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="88.9" x2="-17.78" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="J2" gate="G$1" pin="2"/>
+<wire x1="-2.54" y1="101.6" x2="-2.54" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="-2.54" y1="93.98" x2="-22.86" y2="93.98" width="0.1524" layer="91"/>
+<junction x="-17.78" y="88.9"/>
+<junction x="-22.86" y="93.98"/>
 </segment>
 <segment>
 <pinref part="GND1" gate="1" pin="GND"/>
@@ -12270,6 +12287,11 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <junction x="10.16" y="73.66"/>
 <pinref part="J1" gate="G$1" pin="5"/>
 <wire x1="-15.24" y1="73.66" x2="-15.24" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="J2" gate="G$1" pin="5"/>
+<wire x1="-15.24" y1="86.36" x2="-15.24" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="101.6" x2="5.08" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="86.36" x2="-15.24" y2="86.36" width="0.1524" layer="91"/>
+<junction x="-15.24" y="86.36"/>
 </segment>
 </net>
 <net name="N$38" class="0">
@@ -12278,9 +12300,14 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="22.86" y1="68.58" x2="0" y2="68.58" width="0.1524" layer="91"/>
 <pinref part="J1" gate="G$1" pin="3"/>
-<wire x1="-20.32" y1="86.36" x2="-20.32" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="-20.32" y1="101.6" x2="-20.32" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="-20.32" y1="91.44" x2="-20.32" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="-20.32" y1="68.58" x2="0" y2="68.58" width="0.1524" layer="91"/>
 <junction x="0" y="68.58"/>
+<pinref part="J2" gate="G$1" pin="3"/>
+<wire x1="0" y1="101.6" x2="0" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="0" y1="91.44" x2="-20.32" y2="91.44" width="0.1524" layer="91"/>
+<junction x="-20.32" y="91.44"/>
 </segment>
 </net>
 <net name="N$17" class="0">
