@@ -1,0 +1,18 @@
+Partlist
+
+Exported from i2c_master_v2.brd at 5/8/12 1:31 PM
+
+EAGLE Version 6.2.0 Copyright (c) 1988-2012 CadSoft
+
+Assembly variant: 
+
+Part     Value          Package        Library             Position (mm)         Orientation
+
+C1       100n           C1206          resistor            (60.6425 25.7175)     MR0
+I1       P82B96         SOIC8          P82B96              (67.31 30.48)         MR180
+J1       RJ11-4X        RJ11-NO_SHIELD con-tycoelectronics (87.63 29.21)         R90
+R1       10k            M1206          resistor            (63.5 12.7)           MR0
+R2       10k            M1206          resistor            (63.5 17.78)          MR0
+R3       10k            M1206          resistor            (74.93 36.83)         MR90
+R4       10k            M1206          resistor            (70.8025 39.6875)     MR270
+U$1      ARDUINO-NOHOLE ARDUINO-NOHOLE adafruit            (24.13 2.54)          R0

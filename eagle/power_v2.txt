@@ -1,0 +1,24 @@
+Partlist
+
+Exported from power_v2.sch at 5/8/12 1:32 PM
+
+EAGLE Version 6.2.0 Copyright (c) 1988-2012 CadSoft
+
+Assembly variant: 
+
+Part     Value           Device          Package   Library    Sheet
+
++5V      WIREPAD4,16O1,6 WIREPAD4,16O1,6 4,16O1,6  wirepad    1
+C1       1000u           CPOL-EUE5-10.5  E5-10,5   resistor   1
+C2       1000u           CPOL-EUE5-10.5  E5-10,5   resistor   1
+C3       1000u           CPOL-EUE5-10.5  E5-10,5   resistor   1
+C4       1000u           CPOL-EUE5-10.5  E5-10,5   resistor   1
+C5       1000u           CPOL-EUE5-10.5  E5-10,5   resistor   1
+GND      WIREPAD4,16O1,6 WIREPAD4,16O1,6 4,16O1,6  wirepad    1
+LED1                     LED5MM          LED5MM    led        1
+R1       200R            R-EU_R1206      R1206     resistor   1
+X1       736880-49       736880-49       736880-49 con-conrad 1
+X2       736880-49       736880-49       736880-49 con-conrad 1
+X3       736880-49       736880-49       736880-49 con-conrad 1
+X4       736880-49       736880-49       736880-49 con-conrad 1
+X5       736880-49       736880-49       736880-49 con-conrad 1

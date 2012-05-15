@@ -1,0 +1,45 @@
+Partlist
+
+Exported from board_v2.sch at 5/8/12 1:31 PM
+
+EAGLE Version 6.2.0 Copyright (c) 1988-2012 CadSoft
+
+Assembly variant: 
+
+Part     Value          Device     Package        Library             Sheet
+
+C1       100n           C-EUC1206  C1206          resistor            1
+C2       22u            CPOL-EUC   PANASONIC_C    resistor            1
+J1       RJ11-4X        RJ11-4X    RJ11-NO_SHIELD con-tycoelectronics 1
+J2       RJ11-4X        RJ11-4X    RJ11-NO_SHIELD con-tycoelectronics 1
+PWR      736880-49      736880-49  736880-49      con-conrad          1
+Q1       BD140          BD140      TO126AV        transistor-power    1
+Q2       BD140          BD140      TO126AV        transistor-power    1
+Q3       BD140          BD140      TO126AV        transistor-power    1
+Q4       BD140          BD140      TO126AV        transistor-power    1
+Q5       BD140          BD140      TO126AV        transistor-power    1
+Q6       BD140          BD140      TO126AV        transistor-power    1
+Q7       BD140          BD140      TO126AV        transistor-power    1
+Q8       BD140          BD140      TO126AV        transistor-power    1
+Q9       BD140          BD140      TO126AV        transistor-power    1
+Q10      BD140          BD140      TO126AV        transistor-power    1
+Q11      BD140          BD140      TO126AV        transistor-power    1
+Q12      BD140          BD140      TO126AV        transistor-power    1
+Q13      BD140          BD140      TO126AV        transistor-power    1
+Q14      BD140          BD140      TO126AV        transistor-power    1
+Q15      BD140          BD140      TO126AV        transistor-power    1
+R1       2k7            R-EU_R1206 R1206          resistor            1
+R2       10k            R-EU_R1206 R1206          resistor            1
+R3       10k            R-EU_R1206 R1206          resistor            1
+R4       10k            R-EU_R1206 R1206          resistor            1
+R5       10k            R-EU_R1206 R1206          resistor            1
+R6       10k            R-EU_R1206 R1206          resistor            1
+R7       10k            R-EU_R1206 R1206          resistor            1
+R8       10k            R-EU_R1206 R1206          resistor            1
+S1                      DS04       DS-04          switch-dil          1
+U$1      TLC59116       TLC59116   TSSOP28        tlc                 1
+X1       RJ45-8X        RJ45-8X    RJ45-NO-SHIELD con-tycoelectronics 1
+X2       RJ45-8X        RJ45-8X    RJ45-NO-SHIELD con-tycoelectronics 1
+X3       RJ45-8X        RJ45-8X    RJ45-NO-SHIELD con-tycoelectronics 1
+X4       RJ45-8X        RJ45-8X    RJ45-NO-SHIELD con-tycoelectronics 1
+X5       RJ45-8X        RJ45-8X    RJ45-NO-SHIELD con-tycoelectronics 1
