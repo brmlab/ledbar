@@ -1,8 +1,8 @@
-#include "Tlc5940.h"
+#include "../ledbar.h"
 
 #define CH 3
 
-#define TLCCH(tlc_num, ch_num) ((tlc_num)*16 + (ch_num))
+#define TLCCH(tlc_num, ch_num) (ch_num) /* FIXME */
 
 unsigned int xr1 = 19543;
 
@@ -13,27 +13,23 @@ int cpin[][CH] = {
   {TLCCH(0, 12), TLCCH(0, 11),TLCCH(0, 10)},
   {TLCCH(0, 15),TLCCH(0, 14),TLCCH(0, 13)},
 
+#if 0
   {TLCCH(1, 2), TLCCH(1, 1), TLCCH(1, 0)},
   {TLCCH(1, 5), TLCCH(1, 4), TLCCH(1, 3)},
   {TLCCH(1, 8), TLCCH(1, 7), TLCCH(1, 6)},
   {TLCCH(1, 12), TLCCH(1, 11), TLCCH(1, 10)},
   {TLCCH(1, 15), TLCCH(1, 14), TLCCH(1, 13)},
+#endif
 };
 #define cpinsets (sizeof(cpin)/sizeof(cpin[0]))
 
 /* cca 2.7ohm resistor per channel */
 int cmax[cpinsets][CH] = {
-  { 1600, 4000, 2200 },
-  { 1600, 4000, 2200 },
-  { 1600, 4000, 2200 },
-  { 1600, 3900, 2000 },
-  { 1600, 3700, 3000 },
-
-  { 1600, 4000, 2200 },
-  { 1600, 4000, 2200 },
-  { 1600, 3400, 3000 },
-  { 1600, 4000, 2200 },
-  { 1600, 3400, 3000 },
+  { 100, 250, 138 },
+  { 100, 250, 138 },
+  { 100, 250, 138 },
+  { 100, 240, 230 },
+  { 100, 230, 188 },
 };
 int c[cpinsets][CH];
 
@@ -42,13 +38,14 @@ int wait = 10;
 void setup()
 {
   Serial.begin(9600);
-  /* Call Tlc.init() to setup the tlc.
-     You can optionally pass an initial PWM value (0 - 4095) for all channels.*/
-  Tlc.init();
+  Ledbar.begin(B1100000);
   int i = 0, led = 0;
-  for (led = 0; led < cpinsets; led++)
-    for (i = 0; i < CH; i++)
+  for (led = 0; led < cpinsets; led++) {
+    for (i = 0; i < CH; i++) {
       c[led][i] = cmax[led][i] / 2;
+      Ledbar.setPinMode(cpin[led][i], LPM_PWM);
+    }
+  }
   xr1 += analogRead(0);
 }
 
@@ -164,8 +161,6 @@ void grey(int led)
 
 void loop()
 {
-  Tlc.clear();
-
   int led;
   for (led = 0; led < cpinsets; led++) {
     //random_walk(led);
@@ -179,15 +174,11 @@ void loop()
   for (i = 0; i < CH; i++) {
     for (led = 0; led < cpinsets; led++) {
       //Serial.print(cpin[led][i], DEC); Serial.print("="); Serial.print(c[led][i], DEC); Serial.print("/"); Serial.print(cmax[led][i], DEC); Serial.print(" ");
-      Tlc.set(cpin[led][i], c[led][i]);
+      Ledbar.setPinPWM(cpin[led][i], c[led][i]);
     }
   }
   //Serial.print(NUM_TLCS, DEC);
   //Serial.println();
-
-  /* Tlc.update() sends the data to the TLCs.  This is when the LEDs will
-     actually change. */
-  Tlc.update();
 
   delay(wait);
 }
