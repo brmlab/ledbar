@@ -1,59 +1,11 @@
 #include "../ledbar.h"
 
-#define NUM_TLCS 3
-
-#define TLCCH(tlc_num, ch_num) ((tlc_num) << 4 | (ch_num))
-
-#define CH 3
-
-unsigned int xr1 = 19543;
-
 class Ledbar lb[NUM_TLCS];
-
-int cpin[5 * NUM_TLCS][CH] = {
-  {TLCCH(0, 2), TLCCH(0, 1), TLCCH(0, 0)},
-  {TLCCH(0, 5), TLCCH(0, 4), TLCCH(0, 3)},
-  {TLCCH(0, 8), TLCCH(0, 7), TLCCH(0, 6)},
-  {TLCCH(0, 11), TLCCH(0, 10),TLCCH(0, 9)},
-  {TLCCH(0, 14),TLCCH(0, 13),TLCCH(0, 12)},
-
-  {TLCCH(1, 2), TLCCH(1, 1), TLCCH(1, 0)},
-  {TLCCH(1, 5), TLCCH(1, 4), TLCCH(1, 3)},
-  {TLCCH(1, 8), TLCCH(1, 7), TLCCH(1, 6)},
-  {TLCCH(1, 11), TLCCH(1, 10),TLCCH(1, 9)},
-  {TLCCH(1, 14),TLCCH(1, 13),TLCCH(1, 12)},
-
-  {TLCCH(2, 2), TLCCH(2, 1), TLCCH(2, 0)},
-  {TLCCH(2, 5), TLCCH(2, 4), TLCCH(2, 3)},
-  {TLCCH(2, 8), TLCCH(2, 7), TLCCH(2, 6)},
-  {TLCCH(2, 11), TLCCH(2, 10),TLCCH(2, 9)},
-  {TLCCH(2, 14),TLCCH(2, 13),TLCCH(2, 12)},
-};
-#define cpinsets (sizeof(cpin)/sizeof(cpin[0]))
-
-/* cca 2.7ohm resistor per channel */
-int cmax[cpinsets][CH] = {
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 240, 230 },
-  { 100, 230, 188 },
-
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 240, 230 },
-  { 100, 230, 188 },
-
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 240, 230 },
-  { 100, 230, 188 },
-};
 int c[cpinsets][CH];
 
 int wait = 10;
+
+unsigned int xr1 = 19543;
 
 void setup()
 {
