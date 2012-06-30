@@ -10,7 +10,7 @@ void setup()
   Serial.begin(38400);
   int i = 0, led = 0;
   for (i = 0; i < NUM_TLCS; i++)
-    lb[i].begin(B1100000 | i << 1);
+    lb[i].begin(B1100000 | i);
   for (led = 0; led < cpinsets; led++) {
     for (i = 0; i < CH; i++) {
       c[led][i] = cmax[led][i] / 2;
