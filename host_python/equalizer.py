@@ -5,6 +5,8 @@ import pyaudio
 import struct
 import math
 import numpy as np
+import time
+from datetime import datetime
 
 import ledbar
 
@@ -31,7 +33,7 @@ stream = p.open(format = FORMAT,
                 frames_per_buffer = CHUNK_SIZE)
 
 def get_color(volume):
-    p = 1-15/volume
+    p = 1-15/(volume)
     if p <= 0: return (0, 0, 0)
     p *= p
     if p <= 0.4: return (0, 0, p*2.5)
@@ -44,10 +46,17 @@ history = []
 window = np.array([0.5*(1-math.cos(2*math.pi*i/(SAMPLE_SIZE-1))) for i in xrange(SAMPLE_SIZE)])
 work = True
 
+nexttrig = 0
+
 try:
     while work:
         try: data = stream.read(CHUNK_SIZE)
         except IOError: continue
+        nowtrig = datetime.now().microsecond / 50000
+        if (nowtrig == nexttrig):
+            continue
+        else:
+            nexttrig = nowtrig
         if len(data) == 0: break
         indata = np.array(struct.unpack('%dh'%CHUNK_SIZE,data))
         history.append(indata)
@@ -79,6 +88,7 @@ try:
             c = get_color(volumes[pixel])
             l.set_pixel(pixel, c[0],  c[1], c[2])
         work = l.update()
+        # time.sleep(0.05)
 finally:
     stream.close()
     p.terminate()
