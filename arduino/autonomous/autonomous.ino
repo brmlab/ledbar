@@ -116,7 +116,7 @@ void custom(int led)
 /* White "breathing" effect to a certain degree of intensity. Good for identifying a point where further intensity change does not make any difference. */
 void grey(int led)
 {
-  static const int steps = 20;
+  static const int steps = 200;
   static int s = 0;
   static int d = 1;
 
