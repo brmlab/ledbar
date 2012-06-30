@@ -7,7 +7,7 @@ int wait = 10;
 
 void setup()
 {
-  Serial.begin(38400);
+  Serial.begin(115200);
   int i = 0, led = 0;
   for (i = 0; i < NUM_TLCS; i++)
     lb[i].begin(B1100000 | i);
