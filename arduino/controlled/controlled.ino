@@ -22,11 +22,12 @@ void setup()
 void loop()
 {
   int led, i;
+  while (!Serial.available());
   for (led = 0; led < cpinsets; led++) {
     for (i = 0; i < CH; i++) {
-      while (!Serial.available());
       unsigned long s = (unsigned char) Serial.read();
       // Serial.print(cpin[led][i], DEC); Serial.print("="); Serial.print(s, DEC); Serial.print("/"); Serial.print(cmax[led][i], DEC); Serial.print(" ");
+      //lb[cpin[led][i] >> 4].setPinPWM(cpin[led][i] & 0xf, s);
       lb[cpin[led][i] >> 4].setPinPWM(cpin[led][i] & 0xf, s * cmax[led][i] / 256);
     }
   }
