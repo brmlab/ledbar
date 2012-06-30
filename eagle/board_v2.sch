@@ -11717,7 +11717,7 @@ MAX3223-MAX3243.pdf</description>
 <instance part="R8" gate="G$1" x="5.08" y="33.02" rot="R90"/>
 <instance part="P+11" gate="1" x="27.94" y="15.24" rot="R270"/>
 <instance part="S1" gate="A" x="-5.08" y="48.26" rot="R90"/>
-<instance part="J1" gate="G$1" x="-20.32" y="104.14" rot="R90"/>
+<instance part="J1" gate="G$1" x="-27.94" y="106.68" rot="R180"/>
 <instance part="J2" gate="G$1" x="0" y="104.14" rot="R90"/>
 <instance part="X6" gate="G$1" x="-63.5" y="106.68" rot="MR90"/>
 </instances>
@@ -11957,11 +11957,7 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="-30.48" y1="63.5" x2="-30.48" y2="60.96" width="0.1524" layer="91"/>
 <junction x="-30.48" y="63.5"/>
 <junction x="-30.48" y="60.96"/>
-<pinref part="J1" gate="G$1" pin="4"/>
 <wire x1="-17.78" y1="63.5" x2="-17.78" y2="88.9" width="0.1524" layer="91"/>
-<pinref part="J1" gate="G$1" pin="2"/>
-<wire x1="-17.78" y1="88.9" x2="-17.78" y2="101.6" width="0.1524" layer="91"/>
-<wire x1="-22.86" y1="101.6" x2="-22.86" y2="93.98" width="0.1524" layer="91"/>
 <junction x="-22.86" y="63.5"/>
 <pinref part="J2" gate="G$1" pin="4"/>
 <wire x1="-22.86" y1="93.98" x2="-22.86" y2="63.5" width="0.1524" layer="91"/>
@@ -11970,8 +11966,6 @@ MAX3223-MAX3243.pdf</description>
 <pinref part="J2" gate="G$1" pin="2"/>
 <wire x1="-2.54" y1="101.6" x2="-2.54" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="-2.54" y1="93.98" x2="-22.86" y2="93.98" width="0.1524" layer="91"/>
-<junction x="-17.78" y="88.9"/>
-<junction x="-22.86" y="93.98"/>
 <pinref part="X6" gate="G$1" pin="6"/>
 <pinref part="X6" gate="G$1" pin="8"/>
 <wire x1="-68.58" y1="101.6" x2="-71.12" y2="101.6" width="0.1524" layer="91"/>
@@ -11983,6 +11977,14 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="-68.58" y1="101.6" x2="-66.04" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="-66.04" y1="101.6" x2="-66.04" y2="104.14" width="0.1524" layer="91"/>
 <junction x="-68.58" y="101.6"/>
+<pinref part="J1" gate="G$1" pin="3"/>
+<wire x1="-25.4" y1="106.68" x2="-17.78" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="-17.78" y1="106.68" x2="-17.78" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="5"/>
+<wire x1="-25.4" y1="111.76" x2="-22.86" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="-22.86" y1="111.76" x2="-22.86" y2="93.98" width="0.1524" layer="91"/>
+<junction x="-22.86" y="93.98"/>
+<junction x="-17.78" y="88.9"/>
 </segment>
 <segment>
 <pinref part="GND1" gate="1" pin="GND"/>
@@ -12243,12 +12245,13 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="22.86" y1="73.66" x2="10.16" y2="73.66" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="73.66" x2="-15.24" y2="73.66" width="0.1524" layer="91"/>
 <junction x="10.16" y="73.66"/>
-<pinref part="J1" gate="G$1" pin="5"/>
 <wire x1="-15.24" y1="73.66" x2="-15.24" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="J2" gate="G$1" pin="5"/>
-<wire x1="-15.24" y1="86.36" x2="-15.24" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="101.6" x2="5.08" y2="86.36" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="86.36" x2="-15.24" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="2"/>
+<wire x1="-25.4" y1="104.14" x2="-15.24" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="-15.24" y1="104.14" x2="-15.24" y2="86.36" width="0.1524" layer="91"/>
 <junction x="-15.24" y="86.36"/>
 </segment>
 </net>
@@ -12257,14 +12260,15 @@ MAX3223-MAX3243.pdf</description>
 <pinref part="U$1" gate="G$1" pin="SDA"/>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="22.86" y1="68.58" x2="0" y2="68.58" width="0.1524" layer="91"/>
-<pinref part="J1" gate="G$1" pin="3"/>
-<wire x1="-20.32" y1="101.6" x2="-20.32" y2="91.44" width="0.1524" layer="91"/>
 <wire x1="-20.32" y1="91.44" x2="-20.32" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="-20.32" y1="68.58" x2="0" y2="68.58" width="0.1524" layer="91"/>
 <junction x="0" y="68.58"/>
 <pinref part="J2" gate="G$1" pin="3"/>
 <wire x1="0" y1="101.6" x2="0" y2="91.44" width="0.1524" layer="91"/>
 <wire x1="0" y1="91.44" x2="-20.32" y2="91.44" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="4"/>
+<wire x1="-25.4" y1="109.22" x2="-20.32" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="-20.32" y1="109.22" x2="-20.32" y2="91.44" width="0.1524" layer="91"/>
 <junction x="-20.32" y="91.44"/>
 </segment>
 </net>
