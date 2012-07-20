@@ -341,7 +341,7 @@ int main(int argc, char* argv[])
     if (fp) {
         struct termios t;
         tcgetattr(fileno(fp), &t);
-        cfsetspeed(&t, B38400);
+        cfsetspeed(&t, B115200);
         tcsetattr(fileno(fp), TCSADRAIN, &t);
         sleep(2);
     }
