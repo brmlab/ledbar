@@ -15,7 +15,7 @@ void setup()
     lb[i].begin(B1100000 | i);
   for (led = 0; led < cpinsets; led++) {
     for (i = 0; i < CH; i++) {
-      c[led][i] = cmax[led][i] / 2;
+      c[led][i] = map(5, 0, 10, cmin[led][i], cmax[led][i]);
       lb[cpin[led][i] >> 4].setPinMode(cpin[led][i] & 0xf, LPM_PWM);
     }
   }
@@ -46,7 +46,15 @@ void random_walk(int led)
     if (g[led][i] < -cmaxgrad[i]) g[led][i] = -cmaxgrad[i] + r(maxbounce); else if (g[led][i] > cmaxgrad[i]) g[led][i] = cmaxgrad[i] - r(maxbounce);
 
     c[led][i] += g[led][i];
-    if (c[led][i] < 0) { c[led][i] = 0; g[led][i] = -g[led][i] + r(maxbounce)-maxbounce/2; } else if (c[led][i] > cmax[led][i]) { c[led][i] = cmax[led][i]; g[led][i] = -g[led][i] + r(maxbounce)-maxbounce/2; }
+
+    /* bounce */
+    if (c[led][i] < cmin[led][i]) {
+      c[led][i] = cmin[led][i];
+      g[led][i] = -g[led][i] + r(maxbounce)-maxbounce/2;
+    } else if (c[led][i] > cmax[led][i]) {
+      c[led][i] = cmax[led][i];
+      g[led][i] = -g[led][i] + r(maxbounce)-maxbounce/2;
+    }
   }
 }
 
@@ -69,15 +77,15 @@ void rainbow(int led)
 
   { int huephase = huephases[led], huephase_i = huephases_i[led];
   
-#define huephase_to_c_inc(cc) (uint32_t) huephase_i * cmax[led][cc] / HUEPHASE_LEN
-#define huephase_to_c_dec(cc) (cmax[led][cc] - (uint32_t) huephase_i * cmax[led][cc] / HUEPHASE_LEN)
+#define huephase_to_c_inc(cc) map(huephase_i, 0, HUEPHASE_LEN, cmin[led][cc], cmax[led][cc])
+#define huephase_to_c_dec(cc) map(HUEPHASE_LEN - huephase_i, 0, HUEPHASE_LEN, cmin[led][cc], cmax[led][cc])
   switch (huephase) {
-    case 0: c[led][0] = cmax[led][0]; c[led][1] = huephase_to_c_inc(1); c[led][2] = 0; break;
-    case 1: c[led][0] = huephase_to_c_dec(0); c[led][1] = cmax[led][1]; c[led][2] = 0; break;
-    case 2: c[led][0] = 0; c[led][1] = cmax[led][1]; c[led][2] = huephase_to_c_inc(2); break;
-    case 3: c[led][0] = 0; c[led][1] = huephase_to_c_dec(1); c[led][2] = cmax[led][2]; break;
-    case 4: c[led][0] = huephase_to_c_inc(0); c[led][1] = 0; c[led][2] = cmax[led][2]; break;
-    case 5: c[led][0] = cmax[led][0]; c[led][1] = 0; c[led][2] = huephase_to_c_dec(2); break;
+    case 0: c[led][0] = cmax[led][0]; c[led][1] = huephase_to_c_inc(1); c[led][2] = cmin[led][2]; break;
+    case 1: c[led][0] = huephase_to_c_dec(0); c[led][1] = cmax[led][1]; c[led][2] = cmin[led][2]; break;
+    case 2: c[led][0] = cmin[led][0]; c[led][1] = cmax[led][1]; c[led][2] = huephase_to_c_inc(2); break;
+    case 3: c[led][0] = cmin[led][0]; c[led][1] = huephase_to_c_dec(1); c[led][2] = cmax[led][2]; break;
+    case 4: c[led][0] = huephase_to_c_inc(0); c[led][1] = cmin[led][1]; c[led][2] = cmax[led][2]; break;
+    case 5: c[led][0] = cmax[led][0]; c[led][1] = cmin[led][1]; c[led][2] = huephase_to_c_dec(2); break;
   }
   
   huephase_i++;
@@ -96,20 +104,21 @@ void white(int led)
   int i;
   int mask = 1|2|4; // R, G, B
   for (i = 0; i < CH; i++) {
-    c[led][i] = mask & (1 << i) ? cmax[led][i] : 0;
+    c[led][i] = mask & (1 << i) ? map(255, 0, 255, cmin[led][i], cmax[led][i]) : 0;
   }
 }
 
 
 void custom(int led)
 {
-  long red =   100 - abs (led-9) * 10;
-  long green = 30;
-  long blue =  100 - abs(led-1) * 10;
+  int mled = cpinsets - 1 - led;
+  int red   = map( led, 0, cpinsets - 1, 0, 100);
+  int green = map(mled, 0, cpinsets - 1, 0, 100);;
+  int blue  = 0;
   
-  c[led][0] = red  * cmax[led][0] / 100;
-  c[led][1] = green* cmax[led][1] / 100;
-  c[led][2] = blue * cmax[led][2] / 100;
+  c[led][0] = map(red, 0, 100, cmin[led][0], cmax[led][0]);
+  c[led][1] = map(green, 0, 100, cmin[led][1], cmax[led][1]);
+  c[led][2] = map(blue, 0, 100, cmin[led][2], cmax[led][2]);
 }
 
 
@@ -122,7 +131,7 @@ void grey(int led)
 
   int i;
   for (i = 0; i < CH; i++) {
-    c[led][i] = (uint32_t) cmax[led][i] * s / steps;
+    c[led][i] = map(s, 0, steps, cmin[led][i], cmax[led][i]);
   }
   if (s == steps) {
     d = -1;
