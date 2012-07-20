@@ -152,16 +152,7 @@ void loop()
     //grey(led);
   }
 
-  for (int i = 0; i < NUM_TLCS; i++) {
-    // XXX: We assume static allocation of channels to pins 0..14 (in order)
-    // TODO: Just use unsigned char for c[] ?
-    unsigned char dutycycles[16];
-    int *cblock = (int *) &c[i * LEDS_PER_TLC];
-    for (int j = 0; j < 16; j++) {
-      dutycycles[j] = cblock[j];
-    }
-    lb[i].setAllPinPWM(dutycycles);
-  }
+  setbyc(lb, c);
 
   delay(wait);
 }

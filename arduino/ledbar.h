@@ -135,3 +135,17 @@ const int cmax[cpinsets][CH] = {
   { 100, 230, 188 },
 #endif
 };
+
+static void setbyc(class Ledbar *lb, int (*c)[CH])
+{
+  for (int i = 0; i < NUM_TLCS; i++) {
+    // XXX: We assume static allocation of channels to pins 0..14 (in order)
+    // TODO: Just use unsigned char for c[] ?
+    unsigned char dutycycles[16];
+    int *cblock = (int *) &c[i * LEDS_PER_TLC];
+    for (int j = 0; j < 16; j++) {
+      dutycycles[j] = cblock[j];
+    }
+    lb[i].setAllPinPWM(dutycycles);
+  }
+}
