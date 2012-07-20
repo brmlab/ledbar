@@ -17,22 +17,22 @@ void setup()
       lb[cpin[led][i] >> 4].setPinMode(cpin[led][i] & 0xf, LPM_PWM);
     }
   }
-  Serial.println("ready");
+  Serial.println("- ready");
 }
 
 void loop()
 {
   int led, i;
-  while (!Serial.available());
   for (led = 0; led < cpinsets; led++) {
     for (i = 0; i < CH; i++) {
+      while (!Serial.available());
       unsigned char s = Serial.read();
       //c[led][i] = s;
       c[led][i] = map(s, 0, 255, cmin[led][i], cmax[led][i]);
       //Serial.print(c[led][i], DEC);
-      Serial.print(" ");
+      //Serial.print(" ");
     }
   }
   setbyc(lb, c);
-  Serial.println(".");
+  //Serial.println(".");
 }
