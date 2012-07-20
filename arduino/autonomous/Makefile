@@ -7,4 +7,6 @@ TARGET       = autonomous
 
 ARDUINO_LIBS = Wire Wire/utility
 
+build-cli/autonomous.o: ../ledbar.h
+
 include /usr/share/arduino/Arduino.mk

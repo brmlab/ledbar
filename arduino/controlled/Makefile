@@ -7,4 +7,6 @@ TARGET       = controlled
 
 ARDUINO_LIBS = Wire Wire/utility
 
+build-cli/controlled.o: ../ledbar.h
+
 include /usr/share/arduino/Arduino.mk
