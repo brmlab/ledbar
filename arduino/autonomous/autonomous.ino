@@ -143,15 +143,16 @@ void loop()
     //grey(led);
   }
 
-  int i;
-  for (led = 0; led < cpinsets; led++) {
-    for (i = 0; i < CH; i++) {
-      //Serial.print(cpin[led][i], DEC); Serial.print("="); Serial.print(c[led][i], DEC); Serial.print("/"); Serial.print(cmax[led][i], DEC); Serial.print(" ");
-      lb[cpin[led][i] >> 4].setPinPWM(cpin[led][i] & 0xf, c[led][i]);
+  for (int i = 0; i < NUM_TLCS; i++) {
+    // XXX: We assume static allocation of channels to pins 0..14 (in order)
+    // TODO: Just use unsigned char for c[] ?
+    unsigned char dutycycles[16];
+    int *cblock = (int *) &c[i * LEDS_PER_TLC];
+    for (int j = 0; j < 16; j++) {
+      dutycycles[j] = cblock[j];
     }
+    lb[i].setAllPinPWM(dutycycles);
   }
-  //Serial.print(NUM_TLCS, DEC);
-  //Serial.println();
 
   delay(wait);
 }

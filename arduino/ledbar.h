@@ -16,6 +16,7 @@ class Ledbar {
 	/* pin is 0 .. 15 */
 	void setPinMode(int pin, enum LedbarPinMode pinMode);
 	void setPinPWM(int pin, unsigned char dutyCycle);
+	void setAllPinPWM(unsigned char dutyCycles[16]);
 	private:
 	unsigned char address;
 	unsigned char rawPinModes[4];
@@ -49,16 +50,26 @@ void Ledbar::setPinPWM(int pin, unsigned char dutyCycle)
 	Wire.endTransmission();
 }
 
+void Ledbar::setAllPinPWM(unsigned char dutyCycles[16])
+{
+	Wire.beginTransmission(address);
+	Wire.write(0b10100000 /* autoincrement */ | 0x2);
+	for (int i = 0; i < 16; i++)
+		Wire.write(dutyCycles[i]);
+	Wire.endTransmission();
+}
+
 
 /** Current ledbar configuration: */
 
 #define NUM_TLCS 2
+#define LEDS_PER_TLC 5
 
 #define TLCCH(tlc_num, ch_num) ((tlc_num) << 4 | (ch_num))
 
 #define CH 3
 
-const int cpin[5 * NUM_TLCS][CH] = {
+const int cpin[LEDS_PER_TLC * NUM_TLCS][CH] = {
   {TLCCH(0, 0), TLCCH(0, 1), TLCCH(0, 2)},
   {TLCCH(0, 3), TLCCH(0, 4), TLCCH(0, 5)},
   {TLCCH(0, 6), TLCCH(0, 7), TLCCH(0, 8)},
