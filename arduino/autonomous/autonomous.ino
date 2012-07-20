@@ -54,7 +54,7 @@ void rainbow(int led)
 {
   static int huephases[cpinsets];
   static int huephases_i[cpinsets];
-#define HUEPHASE_LEN 128//512
+#define HUEPHASE_LEN 512
 
   static int ini;
   if (!ini) {
@@ -116,7 +116,7 @@ void custom(int led)
 /* White "breathing" effect to a certain degree of intensity. Good for identifying a point where further intensity change does not make any difference. */
 void grey(int led)
 {
-  static const int steps = 200;
+  static const int steps = 1000;
   static int s = 0;
   static int d = 1;
 
