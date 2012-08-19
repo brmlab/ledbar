@@ -74,6 +74,9 @@ stream = p.open(format = FORMAT,
 def get_color(volume):
     p = 1-15/(volume)
     if p <= 0: return (0, 0, 0)
+    # Monochromatic mode:
+    # p = p * p * p * p * p * p * p
+    # return (0, p/4, p) # or any other combination
     if SLOW == 1:
         p *= p
     else:
