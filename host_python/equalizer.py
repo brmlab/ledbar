@@ -19,12 +19,10 @@ RATE = 44100
 
 PIXELS = 20
 
+SLOW = 0
 HISTORY_SIZE = 4
-SAMPLE_SIZE = CHUNK_SIZE*HISTORY_SIZE
 MIN_FREQ = 20
 MAX_FREQ = 12000
-FREQ_STEP = float(RATE) / (CHUNK_SIZE * HISTORY_SIZE)
-PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/PIXELS)
 
 
 def print_usage():
@@ -33,11 +31,12 @@ USAGE:
     %s [-n number] [-h]
 OPTIONS:
     -n number       number of controlled boxes
+    -s              slow mode
     -h --help       show this help
 ''' % sys.argv[0]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'n:h', ['help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'n:sh', ['help'])
 except getopt.GetOptError:
     print_usage()
     sys.exit(1)
@@ -50,9 +49,18 @@ for k, v in opts:
             print_usage()
             sys.exit(1)
         PIXELS = int(v)
+    elif k == '-s':
+        SLOW = 1
     elif k == '-h' or k == '--help':
         print_usage()
         sys.exit(0)
+
+if SLOW == 1:
+    HISTORY_SIZE = 12
+
+SAMPLE_SIZE = CHUNK_SIZE*HISTORY_SIZE
+FREQ_STEP = float(RATE) / (CHUNK_SIZE * HISTORY_SIZE)
+PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/PIXELS)
 
 
 p = pyaudio.PyAudio()
