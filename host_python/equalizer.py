@@ -19,7 +19,7 @@ RATE = 44100
 
 PIXELS = 20
 
-SLOW = 0
+LAZY = 0
 HISTORY_SIZE = 4
 MIN_FREQ = 50
 MAX_FREQ = 12000
@@ -28,15 +28,15 @@ MAX_FREQ = 12000
 def print_usage():
     print '''\
 USAGE:
-    %s [-n number] [-h]
+    %s [-l] [-n number] [-h]
 OPTIONS:
+    -l              lazy mode
     -n number       number of controlled boxes
-    -s              slow mode
     -h --help       show this help
 ''' % sys.argv[0]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'n:sh', ['help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'n:lh', ['help'])
 except getopt.GetOptError:
     print_usage()
     sys.exit(1)
@@ -49,13 +49,13 @@ for k, v in opts:
             print_usage()
             sys.exit(1)
         PIXELS = int(v)
-    elif k == '-s':
-        SLOW = 1
+    elif k == '-l':
+        LAZY = 1
     elif k == '-h' or k == '--help':
         print_usage()
         sys.exit(0)
 
-if SLOW == 1:
+if LAZY == 1:
     HISTORY_SIZE = 12
 
 SAMPLE_SIZE = CHUNK_SIZE*HISTORY_SIZE
@@ -77,7 +77,7 @@ def get_color(volume):
     # Monochromatic mode:
     # p = p * p * p * p * p * p * p
     # return (0, p/4, p) # or any other combination
-    if SLOW == 1:
+    if LAZY == 1:
         p *= p
     else:
         p *= p * p
