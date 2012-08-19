@@ -23,7 +23,7 @@ def main():
     except getopt.GetOptError:
         print_usage()
         return 1
-    speed = 115200
+    speed = 57600
     number = 20
     show_help = False
     for k, v in opts:
