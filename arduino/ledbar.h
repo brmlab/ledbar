@@ -62,7 +62,7 @@ void Ledbar::setAllPinPWM(unsigned char dutyCycles[16])
 
 /** Current ledbar configuration: */
 
-#define NUM_TLCS 2
+#define NUM_TLCS 4
 #define LEDS_PER_TLC 5
 
 #define TLCCH(tlc_num, ch_num) ((tlc_num) << 4 | (ch_num))
@@ -82,19 +82,23 @@ const int cpin[LEDS_PER_TLC * NUM_TLCS][CH] = {
   {TLCCH(1, 9), TLCCH(1, 10),TLCCH(1, 11)},
   {TLCCH(1, 12),TLCCH(1, 13),TLCCH(1, 14)},
 
-#if 0
   {TLCCH(2, 0), TLCCH(2, 1), TLCCH(2, 2)},
   {TLCCH(2, 3), TLCCH(2, 4), TLCCH(2, 5)},
   {TLCCH(2, 6), TLCCH(2, 7), TLCCH(2, 8)},
   {TLCCH(2, 9), TLCCH(2, 10),TLCCH(2, 11)},
   {TLCCH(2, 12),TLCCH(2, 13),TLCCH(2, 14)},
-#endif
+
+  {TLCCH(3, 0), TLCCH(3, 1), TLCCH(3, 2)},
+  {TLCCH(3, 3), TLCCH(3, 4), TLCCH(3, 5)},
+  {TLCCH(3, 6), TLCCH(3, 7), TLCCH(3, 8)},
+  {TLCCH(3, 9), TLCCH(3, 10),TLCCH(3, 11)},
+  {TLCCH(3, 12),TLCCH(3, 13),TLCCH(3, 14)},
 };
 #define cpinsets (sizeof(cpin)/sizeof(cpin[0]))
 
 /* cca 2.7ohm resistor per channel */
 const int cmin[cpinsets][CH] = {
-  {   4,   0,   0 }, /* box 11 */
+  {   4,   0,   0 }, /* box 1 */
   {   5,   0,   0 }, /* box 2 */
   {   5,   0,   0 }, /* box 3 */
   {   5,   0,   0 }, /* box 4 */
@@ -105,14 +109,18 @@ const int cmin[cpinsets][CH] = {
   {   5,   0,   0 }, /* box 8 */
   {   5,   0,   0 }, /* box 9 */
   {   5,   0,   0 }, /* box 10 */
-#if 0
 
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 240, 230 },
-  { 100, 230, 188 },
-#endif
+  {   4,   0,   0 }, /* box 11 */
+  {   5,   0,   0 }, /* box 12 */
+  {   5,   0,   0 }, /* box 13 */
+  {   5,   0,   0 }, /* box 14 */
+  {   5,   0,   0 }, /* box 15 */
+
+  {   5,   0,   0 }, /* box 16 */
+  {   4,   0,   0 }, /* box 17 */
+  {   5,   0,   0 }, /* box 18 */
+  {   5,   0,   0 }, /* box 19 */
+  {   5,   0,   0 }, /* box 20 */
 };
 const int cmax[cpinsets][CH] = {
   { 120, 250, 190 }, /* box 11 */
@@ -126,14 +134,18 @@ const int cmax[cpinsets][CH] = {
   { 100, 250, 180 }, /* box 8 */
   { 100, 250, 230 }, /* box 9 */
   { 100, 250, 180 }, /* box 10 */
-#if 0
 
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 250, 138 },
-  { 100, 240, 230 },
-  { 100, 230, 188 },
-#endif
+  { 120, 250, 190 }, /* box 11 */
+  { 100, 250, 180 }, /* box 12 */
+  { 100, 250, 180 }, /* box 13 */
+  { 100, 250, 180 }, /* box 14 */
+  { 100, 250, 180 }, /* box 15 */
+
+  {  80, 250, 190 }, /* box 16 */
+  {  90, 250, 160 }, /* box 17 */
+  { 100, 250, 180 }, /* box 18 */
+  { 100, 250, 230 }, /* box 19 */
+  { 100, 250, 180 }, /* box 20 */
 };
 
 static void setbyc(class Ledbar *lb, int (*c)[CH])
