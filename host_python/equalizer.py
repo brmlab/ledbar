@@ -6,6 +6,8 @@ import struct
 import math
 import numpy as np
 import time
+import sys
+import getopt
 from datetime import datetime
 
 import ledbar
@@ -23,6 +25,35 @@ MIN_FREQ = 20
 MAX_FREQ = 12000
 FREQ_STEP = float(RATE) / (CHUNK_SIZE * HISTORY_SIZE)
 PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/PIXELS)
+
+
+def print_usage():
+    print '''\
+USAGE:
+    %s [-n number] [-h]
+OPTIONS:
+    -n number       number of controlled boxes
+    -h --help       show this help
+''' % sys.argv[0]
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], 'n:h', ['help'])
+except getopt.GetOptError:
+    print_usage()
+    sys.exit(1)
+if len(args):
+    print_usage()
+    sys.exit(1)
+for k, v in opts:
+    if k == '-n':
+        if not v.isdigit():
+            print_usage()
+            sys.exit(1)
+        PIXELS = int(v)
+    elif k == '-h' or k == '--help':
+        print_usage()
+        sys.exit(0)
+
 
 p = pyaudio.PyAudio()
 
