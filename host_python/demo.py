@@ -31,7 +31,7 @@ def main():
     if len(args):
         print_usage()
         return 1
-    number = 10
+    number = 20
     show_help = False
     for k, v in opts:
         if k == '-n':

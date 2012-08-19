@@ -6,7 +6,7 @@ import time
 
 class Ledbar:
 
-    def __init__(self, boxes=10, secs_per_frame=0.025):
+    def __init__(self, boxes=20, secs_per_frame=0.025):
         self.boxes = boxes
         self.secs_per_frame = secs_per_frame
         self.last_update = time.time()

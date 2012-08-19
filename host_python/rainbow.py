@@ -5,7 +5,7 @@ import sys
 
 from ledbar import Ledbar
 
-PIXELS = 10
+PIXELS = 20
 
 def update(t, i):
     offset = float(i)/PIXELS

@@ -24,7 +24,7 @@ def main():
         print_usage()
         return 1
     speed = 115200
-    number = 10
+    number = 20
     show_help = False
     for k, v in opts:
         if k == '-n':
