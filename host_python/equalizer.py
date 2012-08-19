@@ -18,8 +18,9 @@ CHANNELS = 1
 RATE = 44100
 
 PIXELS = 20
-
 LAZY = 0
+SYMMETRIC = 0
+
 HISTORY_SIZE = 4
 MIN_FREQ = 50
 MAX_FREQ = 12000
@@ -28,15 +29,16 @@ MAX_FREQ = 12000
 def print_usage():
     print '''\
 USAGE:
-    %s [-l] [-n number] [-h]
+    %s [-l] [-n number] [-s] [-h]
 OPTIONS:
     -l              lazy mode
     -n number       number of controlled boxes
+    -s              symmetric mode
     -h --help       show this help
 ''' % sys.argv[0]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'n:lh', ['help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'n:lsh', ['help'])
 except getopt.GetOptError:
     print_usage()
     sys.exit(1)
@@ -51,16 +53,23 @@ for k, v in opts:
         PIXELS = int(v)
     elif k == '-l':
         LAZY = 1
+    elif k == '-s':
+        SYMMETRIC = 1
     elif k == '-h' or k == '--help':
         print_usage()
         sys.exit(0)
 
 if LAZY == 1:
     HISTORY_SIZE = 12
+if SYMMETRIC == 1:
+    EPIXELS = PIXELS / 2
+else:
+    EPIXELS = PIXELS
+# EPIXELS: Effective pixels (for spectrum display)
 
 SAMPLE_SIZE = CHUNK_SIZE*HISTORY_SIZE
 FREQ_STEP = float(RATE) / (CHUNK_SIZE * HISTORY_SIZE)
-PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/PIXELS)
+PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/EPIXELS)
 
 
 p = pyaudio.PyAudio()
@@ -118,7 +127,7 @@ try:
         pixel = 0
         count = 0
         volumes = []
-        while pixel < PIXELS:
+        while pixel < EPIXELS:
             total = 0.0
             while freq < freq_limit:
                 total += abs(fft[i])**2
@@ -129,9 +138,13 @@ try:
             freq_limit *= PIXEL_FREQ_RANGE
             pixel += 1
             count = 0
-        for pixel in xrange(PIXELS):
+        for pixel in xrange(EPIXELS):
             c = get_color(volumes[pixel])
-            l.set_pixel(pixel, c[0],  c[1], c[2])
+            if SYMMETRIC == 1:
+                l.set_pixel(PIXELS / 2 + pixel, c[0],  c[1], c[2])
+                l.set_pixel(PIXELS / 2 - (pixel + 1), c[0],  c[1], c[2])
+            else:
+                l.set_pixel(pixel, c[0],  c[1], c[2])
         work = l.update()
         # time.sleep(0.05)
 finally:
