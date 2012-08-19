@@ -35,7 +35,7 @@
 #define RESX 800
 #define RESY 600
 #define BPP 32
-#define BOXES 10
+#define BOXES 20
 #define FPS 40
 
 SDL_Rect rects[BOXES];
