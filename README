@@ -1,0 +1,8 @@
+eagle: PCB design
+arduino: Semi-generic TLC59116 library and ledbar Arduino firmware
+host: C frontend
+host_python: Python frontend
+
+Both the C frontend and the Python frontend have their pros and cons.
+We still use both and it's unclear which one will prevail. Try them
+and use the one you like better.
