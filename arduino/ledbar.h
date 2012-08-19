@@ -97,7 +97,7 @@ const int cpin[LEDS_PER_TLC * NUM_TLCS][CH] = {
 #define cpinsets (sizeof(cpin)/sizeof(cpin[0]))
 
 /* cca 2.7ohm resistor per channel */
-const int cmin[cpinsets][CH] = {
+const int cmin[cpinsets][CH] = { // level of 1 (not 0!)
   {   4,   0,   0 }, /* box 1 */
   {   5,   0,   0 }, /* box 2 */
   {   5,   0,   0 }, /* box 3 */
@@ -122,7 +122,7 @@ const int cmin[cpinsets][CH] = {
   {   5,   0,   0 }, /* box 19 */
   {   5,   0,   0 }, /* box 20 */
 };
-const int cmax[cpinsets][CH] = {
+const int cmax[cpinsets][CH] = { // level of 255
   { 120, 250, 190 }, /* box 11 */
   { 100, 250, 180 }, /* box 2 */
   { 100, 250, 180 }, /* box 3 */

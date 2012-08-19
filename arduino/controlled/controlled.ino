@@ -28,7 +28,7 @@ void loop()
       while (!Serial.available());
       unsigned char s = Serial.read();
       //c[led][i] = s;
-      c[led][i] = map(s, 0, 255, cmin[led][i], cmax[led][i]);
+      c[led][i] = s == 0 ? 0 : map(s, 1, 255, cmin[led][i], cmax[led][i]);
       //Serial.print(c[led][i], DEC);
       //Serial.print(" ");
     }

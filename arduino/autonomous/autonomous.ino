@@ -1,5 +1,7 @@
 #include "../ledbar.h"
 
+/* FIXME: cmin[] is not handled properly here, it's the level of 1, not 0. */
+
 class Ledbar lb[NUM_TLCS];
 int c[cpinsets][CH];
 
