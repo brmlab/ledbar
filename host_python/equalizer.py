@@ -74,7 +74,10 @@ stream = p.open(format = FORMAT,
 def get_color(volume):
     p = 1-15/(volume)
     if p <= 0: return (0, 0, 0)
-    p *= p
+    if SLOW == 1:
+        p *= p
+    else:
+        p *= p * p
     if p <= 0.4: return (0, 0, p*2.5)
     elif p <= 0.7: return (0, (p-0.4)*3.33, 1.0-(p-0.4)*3.33)
     elif p <= 0.9: return ((p-0.7)*5.0, 1.0-(p-0.7)*5.0, 0.0)
