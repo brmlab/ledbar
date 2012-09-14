@@ -81,11 +81,14 @@ stream = p.open(format = FORMAT,
                 frames_per_buffer = CHUNK_SIZE)
 
 def get_color(volume):
-    p = 1-15/(volume)
+    vol_thres = 200
+    if volume <= vol_thres: return (0, 0, 0)
+    p = 1-25/(volume-vol_thres)
     if p <= 0: return (0, 0, 0)
+    if p >= 1: return (1.0, 1.0, 1.0)
     # Monochromatic mode:
-    # p = p * p * p * p * p * p * p
-    # return (0, p/4, p) # or any other combination
+    #p = p * p * p * p * p * p * p
+    #return (p, p, 0) # or any other combination
     if LAZY == 1:
         p *= p
     else:
