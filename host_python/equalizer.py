@@ -100,6 +100,8 @@ def get_color(volume):
 
 l = ledbar.Ledbar(PIXELS)
 history = []
+
+history_diminish = np.array([[((i+1.0) / HISTORY_SIZE)**2] * CHUNK_SIZE for i in xrange(HISTORY_SIZE)])
 window = np.array([0.5*(1-math.cos(2*math.pi*i/(SAMPLE_SIZE-1))) for i in xrange(SAMPLE_SIZE)])
 work = True
 
@@ -119,7 +121,7 @@ try:
         history.append(indata)
         if len(history) > HISTORY_SIZE: history.pop(0)
         elif len(history) < HISTORY_SIZE: continue
-        fft = np.fft.rfft(np.concatenate(history)*window)
+        fft = np.fft.rfft(np.concatenate(history*history_diminish)*window)
         freq_limit = MIN_FREQ
         freq = 0
         i = 0
