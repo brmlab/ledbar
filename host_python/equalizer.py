@@ -12,7 +12,7 @@ from datetime import datetime
 
 import ledbar
 
-CHUNK_SIZE = 1024
+CHUNK_SIZE = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
@@ -21,7 +21,7 @@ PIXELS = 20
 LAZY = 0
 SYMMETRIC = 0
 
-HISTORY_SIZE = 4
+HISTORY_SIZE = 8
 MIN_FREQ = 30
 MAX_FREQ = 12000
 
