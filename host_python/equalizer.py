@@ -127,6 +127,7 @@ try:
             i += 1
             freq += FREQ_STEP
         freq_limit *= PIXEL_FREQ_RANGE
+        freq_steps = 1
         pixel = 0
         count = 0
         volumes = []
@@ -136,9 +137,10 @@ try:
                 total += abs(fft[i])**2
                 i += 1; count += 1
                 freq += FREQ_STEP
-            volume = (total/count)**0.5/SAMPLE_SIZE
-            volumes.append(volume)
+            volume = (total/count)**0.5
+            volumes.append(volume/SAMPLE_SIZE*freq_steps)
             freq_limit *= PIXEL_FREQ_RANGE
+            freq_steps += 1
             pixel += 1
             count = 0
         for pixel in xrange(EPIXELS):
