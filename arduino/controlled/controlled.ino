@@ -23,6 +23,11 @@ void setup()
 void loop()
 {
   int led, i;
+  /* Wait for synchronization. */
+  do {
+    while (!Serial.available());
+  } while (Serial.read() != 0xAC);
+  /* Set LEDs. */
   for (led = 0; led < cpinsets; led++) {
     for (i = 0; i < CH; i++) {
       while (!Serial.available());

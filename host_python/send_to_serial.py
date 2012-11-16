@@ -54,7 +54,7 @@ def main():
 
     try:
         while True:
-            data = ''
+            data = '\xAC'
             to_read = number*3
             while to_read > 0:
                 read = sys.stdin.read(to_read)

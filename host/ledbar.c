@@ -298,6 +298,9 @@ void drawScreen(SDL_Surface* screen, int t, FILE* fp)
 
     if(SDL_MUSTLOCK(screen) && SDL_LockSurface(screen) < 0) return;
 
+    if (fp)
+	fwrite("\xAC", 1, 1, fp);
+
     for (i=0; i<BOXES; ++i) {
         program(i, t, &r, &g, &b);
         if (fp) {
@@ -316,7 +319,8 @@ void drawScreen(SDL_Surface* screen, int t, FILE* fp)
 
     if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
     SDL_Flip(screen);
-    fflush(fp);
+    if (fp)
+	fflush(fp);
 }
 
 
