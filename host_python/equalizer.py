@@ -27,7 +27,7 @@ MAX_FREQ = 12000
 
 ATTENUATION = 10**(40/10) # attenuation of 40dB
 
-HUE = 1 # 1 - reddish, 0 - blueish
+HUE = 0 # 1 - reddish, 0 - blueish
 
 logging.basicConfig(level='WARNING')
 
@@ -40,11 +40,12 @@ OPTIONS:
     -n number       number of controlled boxes
     -s              symmetric mode
     -a number       attenuation in dB (try -a40.0)
+    -H number       hue mode: 0 == blue-green (default), 1 == red-blue
     -h --help       show this help
 ''' % sys.argv[0]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'n:lsha:', ['help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'n:lsha:H:', ['help'])
 except getopt.GetoptError:
     print_usage()
     sys.exit(1)
@@ -70,6 +71,11 @@ for k, v in opts:
             print 'error: attenuation must be float value'
             print_usage()
         ATTENUATION = 10**(v/10)
+    elif k == '-H':
+        if not v.isdigit():
+            print_usage()
+            sys.exit(1)
+        HUE = int(v)
 
 if LAZY == 1:
     HISTORY_SIZE = 12
