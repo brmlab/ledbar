@@ -66,7 +66,7 @@ for k, v in opts:
         sys.exit(0)
     elif k == '-a':
         try: v = float(v)
-        except:
+        except ValueError:
             print 'error: attenuation must be float value'
             print_usage()
         ATTENUATION = 10**(v/10)
@@ -148,6 +148,7 @@ def loop( stream ):
         elif len(history) < HISTORY_SIZE: continue
         
         # obtain input sequence ~~ oohhh what a kind of dimmish magic and windowing
+        #TODO: dynamic attenuation based on average power of input signal over timespan, threshold to cut off noise
         x = np.concatenate(history*history_diminish)*window/ATTENUATION
         
         # compute power spectral desity using autocarelate approach
@@ -159,7 +160,8 @@ def loop( stream ):
         # integrate energy within bands ~~ oh, oohhh: look at the orthoginality trick
         bands = (freqs>bands[...,:-1]) & (freqs<=bands[...,1:])
         energy = np.round(( bands * psd ).sum(0).squeeze())
-        
+        #energy = np.round(( bands * psd / bands.sum(0) ).sum(0).squeeze())
+
         # write some debug colorfull, very usefull
         ansicolors = ('\033[30;1m%5.0f\033[0m', '\033[33;1m%5.0f\033[0m', '\033[1;31m%5.0f\033[0m')
         sys.stderr.write('\r[%s]     '%','.join( 
@@ -177,4 +179,8 @@ def loop( stream ):
         # time.sleep(0.05)
 
 if __name__ == '__main__':
-    with_stream(loop)
+    try:
+        with_stream(loop)
+    except KeyboardInterrupt:
+        pass
+
