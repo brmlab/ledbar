@@ -1,5 +1,9 @@
+#!/usr/bin/python
+
+from __future__ import print_function
 from ledbar import Ledbar
 import math, time
+import sys
 
 WIDTH = 4
 HEIGHT = 5
@@ -48,6 +52,7 @@ t = 0
 while work:
   center_r = [math.sin(t)*(M/2)+WIDTH/2-1,     math.cos(t)*(M/2)+HEIGHT/2-1]
   center_g = [math.sin(t*0.53234)*(M/2)+WIDTH/2-1, HEIGHT/2-1]
+  print ("red: ", center_r[0], center_r[1], "  green: ", center_g[0], center_g[1], end = "     \r", file = sys.stderr)
   for x in range(WIDTH):
     for y in range(HEIGHT):
       r = cdist(center_r, [x,y], 0.2)
@@ -56,5 +61,4 @@ while work:
       g = lint(g, corr_g_p, corr_g_v)
       set_pixel_2d(l, x, y, r, g, 0)
   work = l.update()
-  t += 0.03
-  time.sleep(0.025)
+  t += 0.01
