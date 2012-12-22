@@ -176,4 +176,5 @@ def loop( stream ):
         work = l.update()
         # time.sleep(0.05)
 
-with_stream(loop)
+if __name__ == '__main__':
+    with_stream(loop)
