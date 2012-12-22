@@ -9,7 +9,7 @@ import time
 import sys
 import getopt
 from datetime import datetime
-
+import logging
 import ledbar
 
 CHUNK_SIZE = 256
@@ -25,6 +25,11 @@ HISTORY_SIZE = 8
 MIN_FREQ = 30
 MAX_FREQ = 12000
 
+ATTENUATION = 10**(40/10) # attenuation of 40dB
+
+HUE = 1 # 1 - reddish, 0 - blueish
+
+logging.basicConfig(level='WARNING')
 
 def print_usage():
     print '''\
@@ -34,12 +39,13 @@ OPTIONS:
     -l              lazy mode
     -n number       number of controlled boxes
     -s              symmetric mode
+    -a number       attenuation in dB (try -a40.0)
     -h --help       show this help
 ''' % sys.argv[0]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'n:lsh', ['help'])
-except getopt.GetOptError:
+    opts, args = getopt.getopt(sys.argv[1:], 'n:lsha:', ['help'])
+except getopt.GetoptError:
     print_usage()
     sys.exit(1)
 if len(args):
@@ -58,6 +64,12 @@ for k, v in opts:
     elif k == '-h' or k == '--help':
         print_usage()
         sys.exit(0)
+    elif k == '-a':
+        try: v = float(v)
+        except:
+            print 'error: attenuation must be float value'
+            print_usage()
+        ATTENUATION = 10**(v/10)
 
 if LAZY == 1:
     HISTORY_SIZE = 12
@@ -71,14 +83,21 @@ SAMPLE_SIZE = CHUNK_SIZE*HISTORY_SIZE
 FREQ_STEP = float(RATE) / (CHUNK_SIZE * HISTORY_SIZE)
 PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/EPIXELS)
 
+def with_stream(  fnc ):
 
-p = pyaudio.PyAudio()
+    p = pyaudio.PyAudio()
 
-stream = p.open(format = FORMAT,
-                channels = CHANNELS,
-                rate = RATE,
-                input = True,
-                frames_per_buffer = CHUNK_SIZE)
+    stream = p.open(format = FORMAT,
+                    channels = CHANNELS,
+                    rate = RATE,
+                    input = True,
+                    frames_per_buffer = CHUNK_SIZE)
+    try: 
+        fnc(stream)
+    finally:
+        stream.close()
+        p.terminate()    
+
 
 def get_color(volume):
     vol_thres = 200
@@ -93,21 +112,27 @@ def get_color(volume):
         p *= p
     else:
         p *= p * p
-    if p <= 0.4: return (0, 0, p*2.5)
-    elif p <= 0.7: return (0, (p-0.4)*3.33, 1.0-(p-0.4)*3.33)
-    elif p <= 0.9: return ((p-0.7)*5.0, 1.0-(p-0.7)*5.0, 0.0)
-    else: return (1.0, (p-0.9)*10.0, (p-0.9)*10.0)
+    if HUE:
+        if p <= 0.4: return (p*2.5,0,0)
+        elif p <= 0.7: return (1.0-(p-0.4)*3.33, 0, (p-0.4)*3.33)
+        elif p <= 0.9: return (1.0-(p-0.7)*5.0, 0, (p-0.7)*5.0)
+        else: return (1.0, (p-0.9)*10.0, (p-0.9)*10.0)
+    else:
+        if p <= 0.4: return (0, 0, p*2.5)
+        elif p <= 0.7: return (0, (p-0.4)*3.33, 1.0-(p-0.4)*3.33)
+        elif p <= 0.9: return ((p-0.7)*5.0, 1.0-(p-0.7)*5.0, 0.0)
+        else: return (1.0, (p-0.9)*10.0, (p-0.9)*10.0)
 
-l = ledbar.Ledbar(PIXELS)
-history = []
-
-history_diminish = np.array([[((i+1.0) / HISTORY_SIZE)**2] * CHUNK_SIZE for i in xrange(HISTORY_SIZE)])
-window = np.array([0.5*(1-math.cos(2*math.pi*i/(SAMPLE_SIZE-1))) for i in xrange(SAMPLE_SIZE)])
-work = True
-
-nexttrig = 0
-
-try:
+def loop( stream ):
+    l = ledbar.Ledbar(PIXELS)
+    history = []
+    
+    history_diminish = np.array([[((i+1.0) / HISTORY_SIZE)**2] * CHUNK_SIZE for i in xrange(HISTORY_SIZE)])
+    window = np.array([0.5*(1-math.cos(2*math.pi*i/(SAMPLE_SIZE-1))) for i in xrange(SAMPLE_SIZE)])
+    work = True
+    
+    nexttrig = 0
+    
     while work:
         try: data = stream.read(CHUNK_SIZE)
         except IOError: continue
@@ -121,32 +146,28 @@ try:
         history.append(indata)
         if len(history) > HISTORY_SIZE: history.pop(0)
         elif len(history) < HISTORY_SIZE: continue
-        fft = np.fft.rfft(np.concatenate(history*history_diminish)*window)
-        freq_limit = MIN_FREQ
-        freq = 0
-        i = 0
-        while freq < freq_limit:
-            i += 1
-            freq += FREQ_STEP
-        freq_limit *= PIXEL_FREQ_RANGE
-        freq_steps = 1
-        pixel = 0
-        count = 0
-        volumes = []
-        while pixel < EPIXELS:
-            total = 0.0
-            while freq < freq_limit:
-                total += abs(fft[i])**2
-                i += 1; count += 1
-                freq += FREQ_STEP
-            volume = (total/count)**0.5
-            volumes.append(volume/SAMPLE_SIZE*freq_steps)
-            freq_limit *= PIXEL_FREQ_RANGE
-            freq_steps += 1
-            pixel += 1
-            count = 0
+        
+        # obtain input sequence ~~ oohhh what a kind of dimmish magic and windowing
+        x = np.concatenate(history*history_diminish)*window/ATTENUATION
+        
+        # compute power spectral desity using autocarelate approach
+        psd = np.abs(np.fft.fft(np.correlate(x,x,'full')))[...,np.newaxis]
+        # frequencies
+        freqs = np.fft.fftfreq(psd.shape[0],1./RATE)[...,np.newaxis]
+        # frequency band vector _orthogonal_ to freqs
+        bands = np.logspace(np.log2(MIN_FREQ),np.log2(MAX_FREQ),EPIXELS+1,True,2)[np.newaxis,...]
+        # integrate energy within bands ~~ oh, oohhh: look at the orthoginality trick
+        bands = (freqs>bands[...,:-1]) & (freqs<=bands[...,1:])
+        energy = np.round(( bands * psd ).sum(0).squeeze())
+        
+        # write some debug colorfull, very usefull
+        ansicolors = ('\033[30;1m%5.0f\033[0m', '\033[33;1m%5.0f\033[0m', '\033[1;31m%5.0f\033[0m')
+        sys.stderr.write('\r[%s]     '%','.join( 
+            (ansicolors[2] if k>400 else ansicolors[1] if k>200 else ansicolors[0]) %k for k in energy
+        ))
+
         for pixel in xrange(EPIXELS):
-            c = get_color(volumes[pixel])
+            c = get_color(energy[pixel])
             if SYMMETRIC == 1:
                 l.set_pixel(PIXELS / 2 + pixel, c[0],  c[1], c[2])
                 l.set_pixel(PIXELS / 2 - (pixel + 1), c[0],  c[1], c[2])
@@ -154,6 +175,5 @@ try:
                 l.set_pixel(pixel, c[0],  c[1], c[2])
         work = l.update()
         # time.sleep(0.05)
-finally:
-    stream.close()
-    p.terminate()
+
+with_stream(loop)
