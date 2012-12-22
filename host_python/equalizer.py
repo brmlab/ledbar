@@ -157,8 +157,8 @@ def loop( stream ):
         #TODO: dynamic attenuation based on average power of input signal over timespan, threshold to cut off noise
         x = np.concatenate(history*history_diminish)*window/ATTENUATION
         
-        # compute power spectral desity using autocarelate approach
-        psd = np.abs(np.fft.fft(np.correlate(x,x,'full')))[...,np.newaxis]
+        # estimate power spectral desity using autocorelate approach
+        psd = np.abs(np.fft.fft(np.correlate(x,x,'same')))[...,np.newaxis]
         # frequencies
         freqs = np.fft.fftfreq(psd.shape[0],1./RATE)[...,np.newaxis]
         # frequency band vector _orthogonal_ to freqs
@@ -175,7 +175,7 @@ def loop( stream ):
         ))
 
         for pixel in xrange(EPIXELS):
-            c = get_color(energy[pixel])
+            c = get_color(energy[pixel]) # consider using energy**0.5 instead
             if SYMMETRIC == 1:
                 l.set_pixel(PIXELS / 2 + pixel, c[0],  c[1], c[2])
                 l.set_pixel(PIXELS / 2 - (pixel + 1), c[0],  c[1], c[2])
