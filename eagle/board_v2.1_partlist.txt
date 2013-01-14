@@ -1,0 +1,48 @@
+Partlist
+
+Exported from board_v2.brd at 1/10/13 10:36 PM
+
+EAGLE Version 6.3.0 Copyright (c) 1988-2012 CadSoft
+
+Assembly variant: 
+
+Part     Value          Package        Library             Position (mm)         Orientation
+
+C1       100n           C1206          resistor            (26.035 35.2425)      R180
+C2       22u            E2,5-5         resistor            (15.24 3.175)         R90
+C3       1u             C1206          resistor            (4.7625 36.5125)      R180
+I2C-IN   RJ11-4X        RJ11-NO_SHIELD con-tycoelectronics (44.0154 41.5925)     R90
+I2C-OUT  RJ11-4X        RJ11-NO_SHIELD con-tycoelectronics (44.0154 25.7175)     R90
+IC1      TLC59116       TSSOP28        tlc                 (24.765 26.67)        R270
+JP1                     2X04           pinhead             (24.765 42.545)       R90
+OUT1     22-23-2041     22-23-2041     con-molex           (3.81 43.815)         R90			http://cz.farnell.com/molex/22-23-2041/header-pin-4way/dp/1462920
+OUT2     22-23-2041     22-23-2041     con-molex           (3.81 29.21)          R90
+OUT3     22-23-2041     22-23-2041     con-molex           (3.81 15.24)          R90
+OUT4     22-23-2041     22-23-2041     con-molex           (24.765 3.81)         R180
+OUT5     22-23-2041     22-23-2041     con-molex           (42.545 3.81)         R180
+PON                     CHIPLED_1206   led                 (35.2425 6.35)        R180
+PWR      ARK210/2EX     ARK210/2EX     con-brm             (3.175 3.81)          R0
+R1       2k7            R1206          resistor            (20.955 33.9725)      R270
+R2       10k            R1206          resistor            (29.21 39.0525)       R270
+R3       10k            R1206          resistor            (29.21 45.72)         R90
+R4       4k7            R1206          resistor            (26.035 33.02)        R0
+R5       10k            R1206          resistor            (18.415 46.355)       MR180
+R6       10k            R1206          resistor            (18.415 43.815)       MR180
+R7       10k            R1206          resistor            (18.415 41.275)       MR180
+R8       10k            R1206          resistor            (18.415 38.735)       MR180
+R9       220R           R1206          resistor            (32.385 6.35)         R90
+T1       BD140          TO126AV        transistor-power    (11.43 41.275)        R0				http://cz.farnell.com/multicomp/bd140/transistor-pnp-to-126/dp/1574351	
+T2       BD140          TO126AV        transistor-power    (11.43 45.085)        R0
+T3       BD140          TO126AV        transistor-power    (11.43 48.895)        R0
+T4       BD140          TO126AV        transistor-power    (11.43 12.7)          R0
+T5       BD140          TO126AV        transistor-power    (11.43 16.51)         R0
+T6       BD140          TO126AV        transistor-power    (11.43 20.32)         R0
+T7       BD140          TO126AV        transistor-power    (27.305 11.43)        R90
+T8       BD140          TO126AV        transistor-power    (23.495 11.43)        R90
+T9       BD140          TO126AV        transistor-power    (19.685 11.43)        R90
+T10      BD140          TO126AV        transistor-power    (45.085 11.43)        R90
+T11      BD140          TO126AV        transistor-power    (41.275 11.43)        R90
+T12      BD140          TO126AV        transistor-power    (37.465 11.43)        R90
+T13      BD140          TO126AV        transistor-power    (11.43 26.67)         R0
+T14      BD140          TO126AV        transistor-power    (11.43 30.48)         R0
+T15      BD140          TO126AV        transistor-power    (11.43 34.29)         R0
