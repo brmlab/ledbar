@@ -88,6 +88,7 @@ else:
 SAMPLE_SIZE = CHUNK_SIZE*HISTORY_SIZE
 FREQ_STEP = float(RATE) / (CHUNK_SIZE * HISTORY_SIZE)
 PIXEL_FREQ_RANGE = math.pow(float(MAX_FREQ) / MIN_FREQ, 1.0/EPIXELS)
+CHUNK_PERIOD = 1.0 / (RATE / CHUNK_SIZE)
 
 def with_stream(  fnc ):
 
@@ -141,7 +142,9 @@ def loop( stream ):
     
     while work:
         try: data = stream.read(CHUNK_SIZE)
-        except IOError: continue
+        except IOError:
+            time.sleep(CHUNK_PERIOD)
+            continue
         nowtrig = datetime.now().microsecond / 50000
         if (nowtrig == nexttrig):
             continue
