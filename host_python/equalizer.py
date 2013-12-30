@@ -149,7 +149,7 @@ def loop( stream ):
             nexttrig = nowtrig
         if len(data) == 0: break
         indata = np.array(struct.unpack('%dh'%CHUNK_SIZE,data))
-        history.append(indata)
+        history.append(-indata)
         if len(history) > HISTORY_SIZE: history.pop(0)
         elif len(history) < HISTORY_SIZE: continue
         
