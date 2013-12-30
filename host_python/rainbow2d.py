@@ -35,23 +35,13 @@ corr_b_v = [0.0, 0.13, 0.18, 1.0]
 def set_pixel_2d(bar, x, y, r, g, b):
   bar.set_pixel(WIDTH - x - 1 + y*WIDTH, r, g, b)
 
-def combine(*fncs):
-    return lambda *args: reduce(
-        id,
-        reduce(
-            lambda acc,fnc:(fnc(*acc),), 
-            reversed(fncs), 
-            args)
-    )
-
-def flip(f):
-    return lambda *a: f(*reversed(a))
-
 def cdist(center, point, scale):
-  from operator import add,sub
-  from math import sqrt
-  from functools import partial
-  return scale*sqrt(reduce(add, map(combine(partial(flip(pow),2),sub),center,point)))
+  dist = math.sqrt(reduce(
+    lambda a,b: a+b,
+    map(lambda (x,y): (x-y)**2, zip(center,point))
+  ))
+  dist = dist*scale
+  return dist
 
 l = Ledbar(PIXELS)
 
